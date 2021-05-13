@@ -1,21 +1,30 @@
 #pragma once
 #include<string>
-#include "TablicaDynamiczna.h"
+#include "GrafMacierz.h"
+#include "GrafLista.h"
+#include "IGraf.h"
+#include "Typy.h"
+#include <sstream>
+#include <iostream>
+#include <fstream>
+#include <iostream>
+#include "Menu.h"
 
 using namespace std;
 
+/*
+Klasa odpowiada za wczytywanie danych z pliku tekstowego.
+*/
 class Dane {
 public:
-	Dane(TablicaDynamiczna*);
-	TablicaDynamiczna* getTablica();
+	Dane();
+	IGraf* getGraf(ReprezentacjaGrafu, TypAlgorytmu);
 	void menu();
 	
 private:
 	void ustawSciezke();
-	void wczytaj();
-	string * menuString;
 	int liczbaOpcji;
-	TablicaDynamiczna* tablica;
 	string sciezka;
+	int* podzielInt(int, string);
 };
 

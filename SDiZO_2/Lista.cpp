@@ -1,79 +1,79 @@
 #include "Lista.h"
-#include <iostream>
-#include "Menu.h"
 
 using namespace std;
 
 
-/*
-Inicjuje pust¹ listê
-*/
-Lista::Lista() {
+template<class T>
+Lista<T>::Lista() {
 	rozmiar = 0;
-	glowa = NULL;
-	ogon = NULL;
+	glowa = nullptr;
+	ogon = nullptr;
 }
 
 /*
 Zwalnia pamiêæ zajmowan¹ przez listê
 */
-Lista::~Lista() {
-	Element* iterator = glowa;
+template<class T>
+Lista<T>::~Lista() {
+	ElementListy<T>* iterator = glowa;
 	for (int i = 0; i < rozmiar; i++) {
-		Element* temp = iterator->nastepny;
+		ElementListy<T>* temp = iterator->nastepny;
 		delete iterator;
 		iterator = temp;
 	}
 }
 
+
 /*
 Tworzy listê z wczytanych danych
 */
-Lista::Lista(TablicaDynamiczna* tablica) {
+/*
+template<class T>
+Lista<T>::Lista(Tablica<T>* tablica) {
 	this->rozmiar = tablica->getRozmiar();
-	glowa = NULL;
-	ogon = NULL;
+	glowa = nullptr;
+	ogon = nullptr;
 	//inicjalizuje pust¹ tablicê
 	if (rozmiar < 1) {
 		rozmiar = 0;
-		glowa = NULL;
-		ogon = NULL;;
+		glowa = nullptr;
+		ogon = nullptr;;
 		return;
 	}
 	//tworzy listê na podstwie kolejnych elementów tablicy
 	else {
-		Element* element = NULL;
+		ElementListy<T>* element = nullptr;
 
 		//pamiêta poprzedni element
-		Element* bufor = NULL;
+		ElementListy<T>* bufor = nullptr;
 		for (int i = 0; i < rozmiar; i++) {
-			element = new Element;
-			element->liczba = tablica->getTablica()[i];
-			
+			element = new ElementListy<T>;
+			element->element = tablica->getTablica()[i];
+
 			//pierwszy element listy
 			if (i == 0) {
 				glowa = element;
-				glowa->poprzedni = NULL;
+				glowa->poprzedni = nullptr;
 			}
 
 			//ostatni element listy
 			if (i == rozmiar - 1) {
 				if (rozmiar == 1) {
 					ogon = element;
-					ogon->nastepny = NULL;
-					ogon->poprzedni = NULL;
+					ogon->nastepny = nullptr;
+					ogon->poprzedni = nullptr;
 				}
 				else {
 					ogon = element;
-					ogon->nastepny = NULL;
+					ogon->nastepny = nullptr;
 					ogon->poprzedni = bufor;
 					bufor->nastepny = ogon;
 				}
-				
+
 			}
 
 			//pozosta³e elementy listy
-			if(i > 0 && i < rozmiar-1) {
+			if (i > 0 && i < rozmiar - 1) {
 				bufor->nastepny = element;
 				element->poprzedni = bufor;
 			}
@@ -81,19 +81,20 @@ Lista::Lista(TablicaDynamiczna* tablica) {
 			bufor = element;
 		}
 	}
-
 }
+*/
 
 /*
 Dodaje element na pocz¹tek listy
 Zmienia wskaŸnik g³owy
 */
-void Lista::dodajPoczatek(int liczba) {
-	Element* nowy = new Element;
-	nowy->liczba = liczba;
-	nowy->poprzedni = NULL;
+template<class T>
+void Lista<T>::dodajPoczatek(T element) {
+	ElementListy<T>* nowy = new ElementListy<T>;
+	nowy->element = element;
+	nowy->poprzedni = nullptr;
 	nowy->nastepny = glowa;
-	if (glowa == NULL) {
+	if (glowa == nullptr) {
 		ogon = nowy;
 	}
 	else {
@@ -107,12 +108,13 @@ void Lista::dodajPoczatek(int liczba) {
 Dodaje element na koniec listy
 Korzysta z tego, ¿e pamiêty jest wskaŸnik na ogon
 */
-void Lista::dodajKoniec(int liczba) {
-	Element* nowy = new Element;
-	nowy->liczba = liczba;
+template<class T>
+void Lista<T>::dodajKoniec(T element) {
+	ElementListy<T>* nowy = new ElementListy<T>;
+	nowy->element = element;
 	nowy->poprzedni = ogon;
-	nowy->nastepny = NULL;
-	if (ogon == NULL) {
+	nowy->nastepny = nullptr;
+	if (ogon == nullptr) {
 		glowa = nowy;
 	}
 	else {
@@ -125,25 +127,27 @@ void Lista::dodajKoniec(int liczba) {
 /*
 Dodaje na konkretn¹ pozycjê, powiêksza zaalokowany obszar o 1
 */
-void Lista::dodaj(int liczba, int pozycja) {
+template<class T>
+void Lista<T>::dodaj(T element, int pozycja) {
 	if (pozycja > rozmiar || pozycja < 0) {
-		throw exception("Poza zakresem");
+		throw exception("[ERROR] Poza zakresem");
 	}
 
-	
+
 	if (pozycja == 0) {
-		dodajPoczatek(liczba);
+		dodajPoczatek(element);
 		return;
-	} else if (pozycja == rozmiar) {
-		dodajKoniec(liczba);
+	}
+	else if (pozycja == rozmiar) {
+		dodajKoniec(element);
 		return;
 	}
 	//przechodzenie od pocz¹tku listy
-	
+
 	else if (pozycja < rozmiar / 2) {
-		Element* nowy = new Element;
-		nowy->liczba = liczba;
-		Element* iterator = glowa;
+		ElementListy<T>* nowy = new ElementListy<T>;
+		nowy->element = element;
+		ElementListy<T>* iterator = glowa;
 		for (int i = 0; i < pozycja - 1; i++) {
 			iterator = iterator->nastepny;
 		}
@@ -157,9 +161,9 @@ void Lista::dodaj(int liczba, int pozycja) {
 	}
 	//przechodzenie od koñca listy
 	else {
-		Element* nowy = new Element;
-		nowy->liczba = liczba;
-		Element* iterator = ogon;
+		ElementListy<T>* nowy = new ElementListy<T>;
+		nowy->element = element;
+		ElementListy<T>* iterator = ogon;
 		for (int i = rozmiar - 1; i > pozycja; i--) {
 			iterator = iterator->poprzedni;
 		}
@@ -172,59 +176,59 @@ void Lista::dodaj(int liczba, int pozycja) {
 	rozmiar++;
 }
 
-void Lista::usunPoczatek() {
+template<class T>
+void Lista<T>::usunPoczatek() {
 	//czy mo¿na cokolwiek usun¹æ
 	if (rozmiar > 0) {
 		rozmiar--;
 		//czy istnieje nastêpny element po g³owie
-		if (glowa->nastepny != NULL) {
-			glowa->nastepny->poprzedni = NULL;
-			Element* temp = glowa->nastepny;
+		if (glowa->nastepny != nullptr) {
+			glowa->nastepny->poprzedni = nullptr;
+			ElementListy<T>* temp = glowa->nastepny;
 			delete glowa;
 			glowa = temp;
 		}
 		else {
 			delete glowa;
-			glowa = NULL;
-			ogon = NULL;
+			glowa = nullptr;
+			ogon = nullptr;
 		}
-		
+
 	}
 	else {
-		throw exception("Brak elementów do usuniêcia");
+		throw exception("[ERROR] Brak elementów do usuniêcia");
 	}
 }
 
-void Lista::usunKoniec() {
+template<class T>
+void Lista<T>::usunKoniec() {
 	//czy mo¿na cokolwiek usun¹æ
 	if (rozmiar > 0) {
 		rozmiar--;
 		//czy istnieje poprzedni element ogona
-		if (ogon->poprzedni != NULL) {
-			ogon->poprzedni->nastepny = NULL;
-			Element* temp = ogon->poprzedni;
+		if (ogon->poprzedni != nullptr) {
+			ogon->poprzedni->nastepny = nullptr;
+			ElementListy<T>* temp = ogon->poprzedni;
 			delete ogon;
 			ogon = temp;
 		}
 		else {
 			delete ogon;
-			glowa = NULL;
-			ogon = NULL;
+			glowa = nullptr;
+			ogon = nullptr;
 		}
 
 	}
 	else {
-		throw exception("Brak elementów do usuniêcia");
+		throw exception("[ERROR] Brak elementów do usuniêcia");
 	}
 }
 
-/*
-Usuwa element na zadanej pozycji
-*/
-void Lista::usun(int pozycja) {
+template<class T>
+void Lista<T>::usun(int pozycja) {
 	//sprawdzanie zakresu
 	if (pozycja >= rozmiar || pozycja < 0) {
-		throw exception("Poza zakresem");
+		throw exception("[ERROR] Poza zakresem");
 	}
 
 	//element na pocz¹tku
@@ -233,25 +237,25 @@ void Lista::usun(int pozycja) {
 		return;
 	}
 	//element na koñcu
-	 else if (pozycja == rozmiar - 1) {
+	else if (pozycja == rozmiar - 1) {
 		usunKoniec();
 		return;
 	}
 	//przechodzenie od pocz¹tku listy
 	else if (pozycja < rozmiar / 2) {
-		Element* iterator = glowa;
+		ElementListy<T>* iterator = glowa;
 		for (int i = 0; i < pozycja - 1; i++) {
 			iterator = iterator->nastepny;
 		}
 		//iterator wskazuje element poprzedaj¹cy usuwany element element
-		Element* elementUsuwany = iterator->nastepny;
+		ElementListy<T>* elementUsuwany = iterator->nastepny;
 		iterator->nastepny = elementUsuwany->nastepny;
 		elementUsuwany->nastepny->poprzedni = iterator;
 		delete elementUsuwany;
 	}
 	//przechodzenie od koñca listy
 	else {
-		Element* iterator = ogon;
+		ElementListy<T>* iterator = ogon;
 		for (int i = rozmiar - 1; i > pozycja; i--) {
 			iterator = iterator->poprzedni;
 		}
@@ -261,49 +265,66 @@ void Lista::usun(int pozycja) {
 		delete iterator;
 	}
 	rozmiar--;
-	
+
 }
 
+template<class T>
+T Lista<T>::getElement(int pozycja) {
+	if (rozmiar == 0 || pozycja < 0 || pozycja >= rozmiar) {
+		throw exception("[ERROR] Poza zakresem");
+	}
+
+	// przechodzenie od pocz¹tku listy
+	if (pozycja < rozmiar / 2) {
+		ElementListy<T>* iterator = glowa;
+		for (int i = 0; i < pozycja; i++) {
+			iterator = iterator->nastepny;
+		}
+		return iterator->element;
+	}
+	//przechodzenie od koñca listy
+	else {
+		ElementListy<T>* iterator = ogon;
+		for (int i = rozmiar - 1; i > pozycja; i--) {
+			iterator = iterator->poprzedni;
+		}
+		return iterator->element;
+	}
+}
+
+
 /*
-Wyszukiwanie elementu o zadanej wartoœci
+Zwraca wskaŸnik na g³owe
+Przyspiesza iterowanie po liscie
 */
-int Lista::wyszukaj(int liczba) {
-	Element* iterator = glowa;
+template<class T>
+ElementListy<T>* Lista<T>::getIterator() {
+	return glowa;
+
+}
+
+
+/*
+Sprawdzenie czy lista zawiera zadany element
+W parametrze jest wyszukiwany element oraz funkcja porównuj¹ca
+*/
+template<class T>
+template<typename F>
+bool Lista<T>::czyZawiera(T element, F porownajF) {
+	ElementListy<T>* iterator = glowa;
 	for (int i = 0; i < rozmiar; i++) {
-		if (iterator->liczba == liczba) {
-			return i;
+		if (porownajF(iterator->element, element)) {
+			return true;
 		}
 		iterator = iterator->nastepny;
 	}
-	throw exception("Brak szukanego elementu");
+	return false;
+
 }
 
-/*
-Wyœwietla zawartoœæ tablicy
-*/
-void Lista::wyswietl() {
-
-	cout << "g³owa -> [ ";
-	Element* iterator = glowa;
-	for (int i = 0; i < rozmiar - 1; i++) {
-		cout << iterator->liczba << " , ";
-		iterator = iterator->nastepny;
-	}
-	if (rozmiar > 0) {
-		cout << iterator->liczba;
-	}
-	cout << " ]\n";
-
-	cout << "ogon -> [ ";
-	iterator = ogon;
-	for (int i = 0; i < rozmiar - 1; i++) {
-		cout << iterator->liczba << " , ";
-		iterator = iterator->poprzedni;
-	}
-	if (rozmiar > 0) {
-		cout << iterator->liczba;
-	}
-	cout << " ]\n";
+template<class T>
+int Lista<T>::getRozmiar() {
+	return rozmiar;
 }
 
 

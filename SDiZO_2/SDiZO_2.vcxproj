@@ -20,20 +20,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dane.cpp" />
-    <ClCompile Include="Kopiec.cpp" />
+    <ClCompile Include="GrafLista.cpp" />
+    <ClCompile Include="GrafMacierz.cpp" />
+    <ClCompile Include="IGraf.cpp" />
     <ClCompile Include="Lista.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="TablicaDynamiczna.cpp" />
-    <ClCompile Include="Testy.cpp" />
+    <ClCompile Include="Tablica.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dane.h" />
-    <ClInclude Include="Kopiec.h" />
-    <ClInclude Include="Lista.h" />
+    <ClInclude Include="GrafLista.h" />
+    <ClInclude Include="GrafMacierz.h" />
+    <ClInclude Include="IGraf.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="TablicaDynamiczna.h" />
-    <ClInclude Include="Testy.h" />
+    <ClInclude Include="Lista.h" />
+    <ClInclude Include="MySTL.h" />
+    <ClInclude Include="Tablica.h" />
+    <ClInclude Include="Typy.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

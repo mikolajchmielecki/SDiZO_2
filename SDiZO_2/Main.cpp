@@ -1,12 +1,12 @@
 #include<iostream>
 #include<locale.h>
 #include<string>
-#include "TablicaDynamiczna.h"
-#include "Dane.h"
 #include "Menu.h"
-#include "Lista.h"
-#include "Kopiec.h"
-#include "Testy.h"
+#include "Typy.h"
+#include "IGraf.h"
+#include "GrafMacierz.h"
+#include "GrafLista.h"
+#include "MySTL.h"
 
 
 using namespace std;
@@ -15,10 +15,10 @@ using namespace std;
 int liczbaOpcji = 2;
 string opcje[] = { "dane","testy" };
 
-TablicaDynamiczna* graf = new TablicaDynamiczna();
 
 
 int main() {
+	
 	setlocale(LC_ALL, "polish");
 	cout << "+--------------------------------------------------------------------------+" << endl;
 	cout << "| SDiZO - zadanie projektowe nr 2                                          |" << endl;
@@ -27,26 +27,37 @@ int main() {
 	cout << "+--------------------------------------------------------------------------+" << endl;
 
 	Menu menu = Menu(liczbaOpcji, opcje, "Menu g³ówne");
+	GrafLista* grafLista = new GrafLista(10, 10, 0, 2, false);
+	IGraf* graf = grafLista;
+	graf->dodajKrawedz(1, 2, 10);
+	graf->dodajKrawedz(1, 3, 11);
+	cout << graf->toString();
+	delete grafLista;
+
+	GrafMacierz* grafMacierz = new GrafMacierz(10, 10, 0, 2, false);
+	IGraf* graf1 = grafMacierz;
+	graf1->dodajKrawedz(1, 2, 10);
+	graf1->dodajKrawedz(1, 3, 11);
+	cout << graf1->toString();
+	delete grafMacierz;
 	while (menu.czyUruchomione()) {
 		switch (menu.wyswietl()) {
-			
 		case 0:
 		{
-			Dane dane = Dane(graf);
-			dane.menu();
-			graf = dane.getTablica();
 			
 		}
 		break;
+
 		case 1:
 		{
-			Testy* testy = new Testy();
-			testy->wykonajTesty();
-			delete testy;
+			
+		}
+		break;
+		case 2:
+		{
 		}
 		break;
 		}
 	}
-	delete graf;
 }
 
