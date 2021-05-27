@@ -19,23 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BellmanFord.cpp" />
     <ClCompile Include="Dane.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="GrafLista.cpp" />
     <ClCompile Include="GrafMacierz.cpp" />
+    <ClCompile Include="IAlgorytm.cpp" />
     <ClCompile Include="IGraf.cpp" />
+    <ClCompile Include="KolejkaPriorytetowa.cpp" />
+    <ClCompile Include="Krawedz.cpp" />
     <ClCompile Include="Lista.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="SP.cpp" />
+    <ClCompile Include="Struktura.cpp" />
     <ClCompile Include="Tablica.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BellmanFord.h" />
     <ClInclude Include="Dane.h" />
+    <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="GrafLista.h" />
     <ClInclude Include="GrafMacierz.h" />
+    <ClInclude Include="IAlgorytm.h" />
     <ClInclude Include="IGraf.h" />
+    <ClInclude Include="KolejkaPriorytetowa.h" />
+    <ClInclude Include="Krawedz.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="MySTL.h" />
+    <ClInclude Include="SP.h" />
+    <ClInclude Include="Struktura.h" />
     <ClInclude Include="Tablica.h" />
     <ClInclude Include="Typy.h" />
   </ItemGroup>

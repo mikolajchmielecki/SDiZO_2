@@ -1,7 +1,9 @@
 #include "IGraf.h"
 
-void IGraf::sprawdzKrawedz() {
-
+void IGraf::sprawdzKrawedz(int start, int koniec, int waga) {
+	if (start < 0 || koniec < 0 || start > liczbaWierzcholkow - 1 || koniec > liczbaWierzcholkow - 1 || waga == INT_MAX) {
+		throw exception("[ERROR] B³¹d wczytania krawêdzi");
+	}
 }
 
 /*
@@ -19,4 +21,8 @@ string IGraf::powielZnak(char znak, int powtorzenia) {
 		wynik += znak;
 	}
 	return wynik;
+}
+
+IGraf::~IGraf()
+{
 }

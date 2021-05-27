@@ -1,10 +1,12 @@
 #include "GrafMacierz.h"
 
 GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czySkierowany) {
+	
 	this->liczbaKrawedzi = liczbaKrawedzi;
 	this->liczbaWierzcholkow = liczbaWierzcholkow;
 	this->wierzcholekStartowy = wierzcholekStartowy;
 	this->wierzcholekKoncowy = wierzcholekKoncowy;
+	this->czySkierowany = czySkierowany;
 	macierz = new Tablica<Tablica<int>*>(liczbaWierzcholkow);
 	for (int i = 0; i < liczbaWierzcholkow; i++) {
 		macierz->tablica[i] = new Tablica<int>(liczbaWierzcholkow);
@@ -12,6 +14,8 @@ GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzch
 			macierz->tablica[i]->tablica[j] = INT_MAX;
 		}
 	}
+	iteratorKolumna = 0;
+	iteratorRzad = 0;
 }
 
 /*
@@ -28,21 +32,97 @@ GrafMacierz::~GrafMacierz() {
 
 /*
 Dodaje krawedŸ do macierzy
-W przypadku kiedy graf jest nieskierowany to dodajemy krawêdŸ w dwóch miejscach
+W przypadku kiedy graf jest nieskierowany to wype³aniony jest tylko lewy dolny trjójkat macierzy
+
 */
 void GrafMacierz::dodajKrawedz(int start, int koniec, int waga) {
-	sprawdzKrawedz();
+	sprawdzKrawedz(start, koniec, waga);
 	macierz->tablica[start]->tablica[koniec] = waga;
+	/*
 	if (!czySkierowany) {
 		macierz->tablica[koniec]->tablica[start] = waga;
 	}
+	*/
+}
+
+/*
+Ustawia punkt pocz¹tku na lewy górny róg macierzy
+*/
+void GrafMacierz::inicjalizujIteratorKrawedzi() {
+	iteratorKolumna = 0;
+	iteratorRzad = 0;
+}
+
+/*
+Poszukuje kolejnej krawêdzi, której waga jest ró¿na od MAX_INT
+*/
+Krawedz* GrafMacierz::nastepnaKrawedz() {
+	
+	// sprawdzenei czy w poprzednim wywo³aniu nie wyszliœmy poza zakres
+	if (czySkierowany == false) {
+		if (iteratorKolumna >= iteratorRzad) {
+			iteratorKolumna = 0;
+			iteratorRzad++;
+		}
+	}
+	// skierowany
+	else {
+		if (iteratorKolumna >= liczbaWierzcholkow) {
+			iteratorKolumna = 0;
+			iteratorRzad++;
+		}
+	}
+
+	// wyjœcie poza zakres
+	if (iteratorRzad >= liczbaWierzcholkow) {
+		return nullptr;
+	}
+
+	for (; iteratorRzad < liczbaWierzcholkow; iteratorRzad++) {
+		for (; iteratorKolumna < liczbaWierzcholkow; iteratorKolumna++) {
+			
+			// dla grafu nieskierowanego brany jest pod uwage tylko lewy dolny trójk¹t
+			if (czySkierowany == false) {
+				if (iteratorKolumna >= iteratorRzad) {
+					break;
+				}
+			}
+			
+			// je¿eli dana krawedŸ istnieje do j¹ zwracamy
+			int waga = macierz->tablica[iteratorRzad]->tablica[iteratorKolumna];
+			if (waga != INT_MAX) {
+
+				// przejœcie do kolejnej komórki
+				iteratorKolumna++;
+
+				return new Krawedz(iteratorRzad, iteratorKolumna-1, waga);
+			}
+		}
+		iteratorKolumna = 0;
+	}
+	return nullptr;
+}
+
+void GrafMacierz::inicjalizujIteratorSasiadow(int wierzcholek)
+{
+}
+
+Krawedz* GrafMacierz::nastepnySasiad()
+{
+	return nullptr;
 }
 
 /*
 Przektsza³ca reprezentacjê macierzow¹ na string w celu wyswietltenia
 */
 string GrafMacierz::toString() {
-	string wynik = "Macierz s¹siedztwa: (S - wierzcho³ek startowy, K - wierzcho³ek koñcowy)\n\n";
+	string wynik = "Macierz s¹siedztwa : ";
+	if (czySkierowany) {
+		wynik += "(S - wierzcho³ek startowy, K - wierzcho³ek koñcowy)\n\n";
+	}
+	else {
+		wynik += "(graf nieskierowany)\n\n";
+	}
 	int szerokoscKomorki = to_string(INT_MIN).length();
 
 	// nag³ówek

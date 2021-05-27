@@ -50,12 +50,13 @@ int* Dane::podzielInt(int liczba, string tekst) {
 		int tmpLiczba;
 		if (stringstream(temp) >> tmpLiczba && i < liczba) {
 			tablica[i] = tmpLiczba;
+			i++;
 		}
 		temp = "";
-		i++;
+		
 	}
 	if (i < liczba) {
-		throw exception("[ERROR] B³¹d podzia³u");
+		throw exception("[ERROR] B³¹d formatu danych");
 	}
 	return tablica;
 }
@@ -115,19 +116,32 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 		}
 		//wczytywanie rozmiaru
 		liczbaKrawedzi = tablica[0];
+		if (liczbaKrawedzi <= 0) {
+			throw exception("[ERROR] B³¹d wczytania liczby krawêdzi");
+		}
+
 		liczbaWierzcholkow = tablica[1];
+		if (liczbaWierzcholkow <= 0) {
+			throw exception("[ERROR] B³¹d wczytania liczby wierzcho³ków");
+		}
 		if (typAlgorytmu == TypAlgorytmu::SP || typAlgorytmu == TypAlgorytmu::MF) {
 			wierzcholekStartowy = tablica[2];
+			if (wierzcholekStartowy < 0 || wierzcholekStartowy >= liczbaWierzcholkow) {
+				throw exception("[ERROR] B³¹d wczytania wierzcho³ka startowego");
+			}
 		}
 		if (typAlgorytmu == TypAlgorytmu::MF) {
 			wierzcholekKoncowy = tablica[3];
+			if (wierzcholekKoncowy < 0 || wierzcholekKoncowy >= liczbaWierzcholkow) {
+				throw exception("[ERROR] B³¹d wczytania wierzcho³ka koñcowego");
+			}
 		}
 		delete tablica;
 		if (plik.fail())
 			throw exception("[ERROR] B³¹d wczytania rozmiaru grafu z pliku");
 		else {
 			if (reprezentacja == ReprezentacjaGrafu::LISTA) {
-				graf = new GrafLista(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, typAlgorytmu!=TypAlgorytmu::MST);
+				graf = new GrafLista(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, typAlgorytmu != TypAlgorytmu::MST);
 			}
 			else if (reprezentacja == ReprezentacjaGrafu::MACIERZ) {
 				graf = new GrafMacierz(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, typAlgorytmu != TypAlgorytmu::MST);
@@ -142,6 +156,17 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 				throw exception("[ERROR] B³¹d wczytania krawêdzi");
 
 			int* krawedzTablica = podzielInt(3, linia);
+
+			// nie akceptujemy krawêdzi miêdzy tym samym wierzcho³kiem
+			if (krawedzTablica[0] == krawedzTablica[1]) {
+				throw exception("[ERROR] Pocz¹tek i koniec krawêdzi to ten sam wierzcho³ek");
+			}
+
+			// dla grafów nieskierowanych pocz¹tek musi byæ wiêkszy od koñca
+			if (typAlgorytmu == TypAlgorytmu::MST && krawedzTablica[0] < krawedzTablica[1]) {
+				swap(krawedzTablica[0], krawedzTablica[1]);
+			}
+
 			graf->dodajKrawedz(krawedzTablica[0], krawedzTablica[1], krawedzTablica[2]);
 			delete krawedzTablica;
 		}

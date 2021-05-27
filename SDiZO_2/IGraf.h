@@ -3,23 +3,32 @@
 #include "MySTL.h"
 #include<limits.h>
 #include<string>
+#include "Krawedz.h"
 
 using namespace std;
 
 class IGraf
 {
 public:
-
-	virtual void dodajKrawedz(int start, int koniec, int waga) = 0;
-	virtual string toString() = 0;
-protected:
+	virtual ~IGraf();
 	int wierzcholekStartowy;
 	int wierzcholekKoncowy;
 	int liczbaKrawedzi;
 	int liczbaWierzcholkow;
+
+	virtual void dodajKrawedz(int start, int koniec, int waga) = 0;
+	virtual string toString() = 0;
+
+
+	virtual void inicjalizujIteratorKrawedzi() = 0;
+	virtual Krawedz* nastepnaKrawedz() = 0;
+	virtual void inicjalizujIteratorSasiadow(int wierzcholek) = 0;
+	virtual Krawedz* nastepnySasiad() = 0;
+protected:
+	
 	ReprezentacjaGrafu reprezentacja;
 	bool czySkierowany;
-	void sprawdzKrawedz();
+	void sprawdzKrawedz(int start, int koniec, int waga);
 	string wyrownajString(string liczbaString, int szerokosc);
 	string powielZnak(char znak, int powtorzenia);
 

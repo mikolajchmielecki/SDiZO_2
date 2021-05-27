@@ -3,7 +3,7 @@
 /*
 Okreœla typ reprezentacji grafu w pamiêci
 */
-enum class ReprezentacjaGrafu { MACIERZ, LISTA };
+enum class ReprezentacjaGrafu { MACIERZ, LISTA, NONE };
 
 /*
 Okresla typ algorytmu.

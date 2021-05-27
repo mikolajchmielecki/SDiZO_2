@@ -89,10 +89,64 @@ int Tablica<T>::getRozmiar() {
 	return rozmiar;
 }
 
+
+
+/*
+Sortuje tablicê danych
+Jako argument przyjmuje fukncjê porównuj¹c¹ dwa argumenty
+*/
+template<class T>
+void Tablica<T>::sortuj(bool (*czyPrzed)(T, T)) {
+	this->czyPrzed = czyPrzed;
+	quickSort(0, rozmiar - 1);
+}
+
+
+
+/*
+Realizuje algorytm sortowania szybkiego
+*/
+template<class T>
+void Tablica<T>::quickSort(int l, int p) {
+	if (l >= p) return;
+	int m = partycjonowanie(l, p);
+	quickSort(l, m);
+	quickSort(m + 1, p);
+}
+
+
+/*
+Dzieli tablicê na dwie czêœci
+Po lewej stronie s¹ wartoœci mniejsze lub równe od pivota
+Po prawej stronie s¹ wartoœci wiêksze lub równe od pivota
+*/
+template<class T>
+int Tablica<T>::partycjonowanie(int lewy, int prawy) {
+	T pivot = tablica[lewy];
+	int l = lewy;
+	int p = prawy;
+	while (true) {
+		while (czyPrzed(tablica[l], pivot)) ++l;
+		while (czyPrzed(pivot, tablica[p])) --p;
+		if (l < p) {
+			swap(tablica[l], tablica[p]);
+			++l;
+			--p;
+		}
+		else {
+			if (p == prawy) p--;
+			return p;
+		}
+	}
+}
+
+
 template<class T>
 void Tablica<T>::zwolnijTablice() {
 	delete[] tablica;
 }
+
+
 
 
 
