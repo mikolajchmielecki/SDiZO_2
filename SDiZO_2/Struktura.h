@@ -8,5 +8,6 @@ public:
 	Struktura();
 	int poprzednik;
 	int klucz;
+	int wierzcholek;
 };
 

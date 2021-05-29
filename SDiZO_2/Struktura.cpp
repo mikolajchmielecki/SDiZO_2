@@ -3,4 +3,5 @@
 Struktura::Struktura() {
 	poprzednik = -1;
 	klucz = INT_MAX;
+	wierzcholek = -1;
 }

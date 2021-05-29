@@ -1,5 +1,5 @@
 #pragma once
-#include "MySTL.h"
+
 #include "Struktura.h"
 #include "IGraf.h"
 #include "IAlgorytm.h"
@@ -11,7 +11,7 @@ class SP : public IAlgorytm {
 public:
 	virtual string getWynik();
 protected:
-	Tablica<Struktura*>* wierzcholki;
+	
 
 private:
 	string odwrocString(string wejscie);

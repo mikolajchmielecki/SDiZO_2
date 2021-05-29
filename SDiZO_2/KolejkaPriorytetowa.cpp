@@ -3,72 +3,72 @@
 
 
 /*
-tworzy kopiec kopiuj¹c dane z tablicy dynamicznej 
+Tworzy kopiec kopiuj¹c dane z tablicy dynamicznej 
+Zak³ada, ¿e pocz¹tkowo kopiec jest zbudowany
+W u¿ywanych algorytmach tak faktycznie jest
 */
 KolejkaPriorytetowa::KolejkaPriorytetowa(Tablica<Struktura*>* tablica) {
-	this->tablica = tablica;
+	this->kopiec = tablica;
+	this->rozmiar = tablica->getRozmiar();
 
-	algorytmFloyda();
-}
+	// tablica która przechowuje indeksy wierzcho³ków w kopcu
+	// indeksy[wierzcholek] zwraca indeks danego wierzcho³ka w kopcu
+	indeksy = new Tablica<int>(tablica->getRozmiar());
+	for (int i = 0; i < indeksy->getRozmiar(); i++) {
+		indeksy->tablica[i] = i;
+	}
 
-
-
-/*
-Nie robi nic. tablica jest przenoszona do menu g³ównego
-*/
-KolejkaPriorytetowa::~KolejkaPriorytetowa() {
-}
-
-/*
-Dodaje element na koniec kopca i naprawia go
-*/
-void KolejkaPriorytetowa::dodaj(int liczba) {
-	tablica->dodajKoniec(liczba);
-
-	//naprawa kopca
-	int indeksPotomka = tablica->getRozmiar() - 1;
-	int indeksRodzica = (indeksPotomka - 1) / 2;
-	while(indeksPotomka != 0) {
-		if (tablica->getTablica()[indeksPotomka] > tablica->getTablica()[indeksRodzica]) {
-			tablica->zamien(indeksPotomka, indeksRodzica);
-		}
-		//nie by³o zamiany
-		else {
-			break;
-		}
-		indeksPotomka = indeksRodzica;
-		indeksRodzica = (indeksPotomka - 1) / 2;
+	czyZawiera = new Tablica<bool>(tablica->getRozmiar());
+	for (int i = 0; i < czyZawiera->getRozmiar(); i++) {
+		czyZawiera->tablica[i] = true;
 	}
 }
 
 
+
 /*
-Usuwa korzeñ. W miejsce korzenia wk³ada ostatni element. Naprawia kopiec.
+
 */
-void KolejkaPriorytetowa::usun(int liczba) {
-	tablica->zamien(0, tablica->getRozmiar() - 1);
-	tablica->usunKoniec();
+KolejkaPriorytetowa::~KolejkaPriorytetowa() {
+	delete indeksy;
+	delete czyZawiera;
+}
+
+
+/*
+Zwraca korzeñ
+Zamienia ostatni element z korzeniem. Naprawia kopiec.
+*/
+Struktura* KolejkaPriorytetowa::usunMinimum() {
+	Struktura* wynik = kopiec->tablica[0];
+
+	czyZawiera->tablica[wynik->wierzcholek] = false;
+
+	// zamiana korzenia z z koñcem
+	zamien(0, rozmiar-1);
+
+	rozmiar--;
 
 	int indeksRodzica = 0;
 	int lewyPotomek = 1;
 	int prawyPotomek = 2;
 
 
-	while (lewyPotomek < tablica->getRozmiar()) {
-		int wiekszyPotomek = -1;
+	while (lewyPotomek < rozmiar) {
+		int mniejszyPotomek = -1;
 
 		//automatyczne pominiêcie b³êdu "poza zakresem" dziêki &&
-		if (prawyPotomek < tablica->getRozmiar() && tablica->getTablica()[prawyPotomek] > tablica->getTablica()[lewyPotomek]) {
-			wiekszyPotomek = prawyPotomek;
+		if (prawyPotomek < rozmiar && kopiec->tablica[prawyPotomek]->klucz < kopiec->tablica[lewyPotomek]->klucz) {
+			mniejszyPotomek = prawyPotomek;
 		}
 		else {
-			wiekszyPotomek = lewyPotomek;
+			mniejszyPotomek = lewyPotomek;
 		}
 		
 		//naprawa
-		if (tablica->getTablica()[wiekszyPotomek] > tablica->getTablica()[indeksRodzica]) {
-			tablica->zamien(wiekszyPotomek, indeksRodzica);
-			indeksRodzica = wiekszyPotomek;
+		if (kopiec->tablica[mniejszyPotomek]->klucz < kopiec->tablica[indeksRodzica]->klucz) {
+			zamien(mniejszyPotomek, indeksRodzica);
+			indeksRodzica = mniejszyPotomek;
 			lewyPotomek = indeksRodzica * 2 + 1;
 			prawyPotomek = indeksRodzica * 2 + 2;
 		}
@@ -77,74 +77,97 @@ void KolejkaPriorytetowa::usun(int liczba) {
 			break;
 		}
 	}
+
+	return wynik;
 }
 
 
 /*
-Naprawia kopiec wg algorytmu Floyda
+Naprawia kopiec w górê od zadanego wierzcho³ka
 */
-void KolejkaPriorytetowa::algorytmFloyda() {
-	for (int i = (tablica->getRozmiar() - 2) / 2; i >= 0; i--) {
-		naprawKolejkaPriorytetowaDol(i);
-	}
-}
-
-
-/*
-Naprawia kopiec w dó³ od zadanego indeksu
-*/
-void KolejkaPriorytetowa::naprawKolejkaPriorytetowaDol(int indeks) {
-	int rozmiar = tablica->getRozmiar();
+void KolejkaPriorytetowa::naprawGora(int indeks) {
 	int lewyPotomekIndeks = -1;
 	int prawyPotomekIndeks = -1;
-	
-	if (indeks * 2 + 1 < rozmiar) {
-		lewyPotomekIndeks = indeks * 2 + 1;
-	}
-	if (indeks * 2 + 2 < rozmiar) {
-		prawyPotomekIndeks = indeks * 2 + 2;
-	}
-	
-	//istnieje tylko lewy potomek
-	if (prawyPotomekIndeks == -1 && lewyPotomekIndeks != -1) {
-		if (tablica->getTablica()[lewyPotomekIndeks] > tablica->getTablica()[indeks]) {
-			tablica->zamien(lewyPotomekIndeks, indeks);
-		}
-	}
-	//istniej¹ oba potomki
-	else if (lewyPotomekIndeks != -1 && prawyPotomekIndeks != -1) {
-		//znajdowanie maksymalnej wartoœci
-		int max = tablica->getTablica()[indeks];
-		if (tablica->getTablica()[lewyPotomekIndeks] > max) {
-			max = tablica->getTablica()[lewyPotomekIndeks];
-			
-			//najwiêkszy prawy
-			if (tablica->getTablica()[prawyPotomekIndeks] > max) {
-				tablica->zamien(prawyPotomekIndeks, indeks);
-				naprawKolejkaPriorytetowaDol(prawyPotomekIndeks);
-				return;
-			}
 
-			//najwiêkszy lewy
-			tablica->zamien(lewyPotomekIndeks, indeks);
-			naprawKolejkaPriorytetowaDol(lewyPotomekIndeks);
-			return;
-		}
-
-		//najwiêkszy prawy
-		if (tablica->getTablica()[prawyPotomekIndeks] > max) {
-			tablica->zamien(prawyPotomekIndeks, indeks);
-			naprawKolejkaPriorytetowaDol(prawyPotomekIndeks);
-			return;
-		}
-	} 
-	//nie ma potomków
-	else {
-		//nic nie rób
-		//koniec rekurencji
+	// zakoñczenie wywo³ania rekurencyjnego
+	if (indeks == 0) {
 		return;
 	}
+
+	int rodzic = (indeks - 1) / 2;
+
+	int brat = -1;
+
+	// brat jest lewym potomkiem
+	if (rodzic*2+1 != indeks) {
+		brat = rodzic * 2 + 1;
+	}
+
+	// brat jest prawym potomkiem
+	if (rodzic * 2 + 2 != indeks) {
+		brat = rodzic * 2 + 2;
+	}
+
+	int mniejszyPotomek = -1;
+	// ma brata
+	if (brat < rozmiar) {
+		
+		// porównanie rodzeñstwa
+		if (kopiec->tablica[brat]->klucz < kopiec->tablica[indeks]->klucz) {
+			mniejszyPotomek = brat;
+		}
+		else {
+			mniejszyPotomek = indeks;
+		}
+	}
+	else {
+		mniejszyPotomek = indeks;
+	}
+
+	// porównanie potomka z rodzicem
+	if (kopiec->tablica[indeks]->klucz < kopiec->tablica[rodzic]->klucz) {
+		zamien(indeks, rodzic);
+		naprawGora(rodzic);
+	}
 }
+
+Struktura* KolejkaPriorytetowa::getWierzcholek(int wierzcholek) {
+	return kopiec->tablica[indeksy->tablica[wierzcholek]];
+}
+
+int KolejkaPriorytetowa::getIndeks(int wierzcholek) {
+	return indeksy->tablica[wierzcholek];
+}
+
+/*
+Przywraca pocz¹tkow¹ kolejnoœæ wierzcho³ków w tablicy struktur
+*/
+Tablica<Struktura*>* KolejkaPriorytetowa::naprawTablice() {
+	Tablica<Struktura*>* tablicaWynikowa = new Tablica<Struktura*>(kopiec->getRozmiar());
+	for (int i = 0; i < kopiec->getRozmiar(); i++) {
+		tablicaWynikowa->tablica[i] = kopiec->tablica[indeksy->tablica[i]];
+	}
+	delete kopiec;
+	return tablicaWynikowa;
+}
+
+bool KolejkaPriorytetowa::czyWierzcholekWKolejce(int wierzcholek) {
+	return czyZawiera->tablica[wierzcholek];
+}
+
+/*
+Zamienia struktury miejscami
+I zmienia indeksy dla tych dwóch wierzcho³ków
+*/
+void KolejkaPriorytetowa::zamien(int indeks1, int indeks2) {
+	swap(indeksy->tablica[kopiec->tablica[indeks1]->wierzcholek], indeksy->tablica[kopiec->tablica[indeks2]->wierzcholek]);
+	swap(kopiec->tablica[indeks1], kopiec->tablica[indeks2]);
+}
+
+
+
+
+
 
 
 

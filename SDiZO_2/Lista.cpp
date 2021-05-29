@@ -29,8 +29,8 @@ Tworzy listê z wczytanych danych
 */
 /*
 template<class T>
-Lista<T>::Lista(Tablica<T>* tablica) {
-	this->rozmiar = tablica->getRozmiar();
+Lista<T>::Lista(Tablica<T>* kopiec) {
+	this->rozmiar = kopiec->getRozmiar();
 	glowa = nullptr;
 	ogon = nullptr;
 	//inicjalizuje pust¹ tablicê
@@ -48,7 +48,7 @@ Lista<T>::Lista(Tablica<T>* tablica) {
 		ElementListy<T>* bufor = nullptr;
 		for (int i = 0; i < rozmiar; i++) {
 			element = new ElementListy<T>;
-			element->element = tablica->getTablica()[i];
+			element->element = kopiec->getTablica()[i];
 
 			//pierwszy element listy
 			if (i == 0) {

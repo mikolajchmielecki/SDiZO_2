@@ -18,7 +18,7 @@ BellmanFord::~BellmanFord() {
 
 void BellmanFord::uruchom() {
 	
-	// tablica odleg³oœci oraz poprzedników
+	// kopiec odleg³oœci oraz poprzedników
 	wierzcholki = new Tablica<Struktura*>(graf->liczbaWierzcholkow);
 
 	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {

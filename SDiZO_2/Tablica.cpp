@@ -33,7 +33,7 @@ void Tablica<T>::dodaj(T element, int pozycja) {
 	T* temp = new T[rozmiar];
 
 	//kopiowanie starej tablicy do nowej
-	// i - indeksuje now¹ tablica
+	// i - indeksuje now¹ kopiec
 	// indeks - indeksuje star¹ tablicê
 	for (int i = 0, indeks = 0; i < rozmiar; i++) {
 
@@ -68,7 +68,7 @@ void Tablica<T>::usun(int pozycja) {
 	}
 
 	//kopiowanie starej tablicy do nowej
-	// i - indeksuje now¹ tablica
+	// i - indeksuje now¹ kopiec
 	// indeks - indeksuje star¹ tablicê
 	for (int i = 0, indeks = 0; i < rozmiar; indeks++) {
 
@@ -129,7 +129,9 @@ int Tablica<T>::partycjonowanie(int lewy, int prawy) {
 		while (czyPrzed(tablica[l], pivot)) ++l;
 		while (czyPrzed(pivot, tablica[p])) --p;
 		if (l < p) {
-			swap(tablica[l], tablica[p]);
+			T temp = tablica[l];
+			tablica[l] = tablica[p];
+			tablica[p] = temp;
 			++l;
 			--p;
 		}

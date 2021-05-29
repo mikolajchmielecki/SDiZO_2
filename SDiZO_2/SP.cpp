@@ -1,9 +1,13 @@
 #include "SP.h"
 
+
+/*
+
+*/
 string SP::getWynik() {
     string wynik = "Start = ";
     wynik += to_string(graf->wierzcholekStartowy);
-    wynik += "\n End\t Dist\t Path\n";
+    wynik += "\n End\t Dist\t Path\n\n";
 
     // wpisywanie wyników kolejnych wierzcho³ków
     for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
@@ -21,6 +25,11 @@ string SP::getWynik() {
             sciezka += to_string(wierzcholek);
             sciezka += " ";
             wierzcholek = wierzcholki->tablica[wierzcholek]->poprzednik;
+
+            // je¿eli graf jest niespójny to poprzednik, którego wierzcho³ka bêdzie wynosi³ -1
+            if (wierzcholek == -1) {
+                throw exception("[ERROR] Graf jest niespójny");
+            }
         }
         // dodanie wierzcho³ka startowego
         sciezka += to_string(wierzcholek);

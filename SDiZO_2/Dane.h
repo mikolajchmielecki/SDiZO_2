@@ -18,7 +18,7 @@ Klasa odpowiada za wczytywanie danych z pliku tekstowego.
 class Dane {
 public:
 	Dane();
-	IGraf* getGraf(ReprezentacjaGrafu, TypAlgorytmu);
+	IGraf* getGraf(ReprezentacjaGrafu, TypAlgorytmu, bool);
 	void menu();
 	
 private:

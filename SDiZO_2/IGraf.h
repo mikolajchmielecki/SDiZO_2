@@ -3,6 +3,7 @@
 #include "MySTL.h"
 #include<limits.h>
 #include<string>
+#include "Struktura.h"
 #include "Krawedz.h"
 
 using namespace std;
@@ -25,7 +26,6 @@ public:
 	virtual void inicjalizujIteratorSasiadow(int wierzcholek) = 0;
 	virtual Krawedz* nastepnySasiad() = 0;
 protected:
-	
 	ReprezentacjaGrafu reprezentacja;
 	bool czySkierowany;
 	void sprawdzKrawedz(int start, int koniec, int waga);

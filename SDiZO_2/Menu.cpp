@@ -49,6 +49,7 @@ int Menu::wyswietl() {
 	else {
 		uruchomione = false;
 	}
+	cout << endl;
 	return wejscieLiczba;
 }
 

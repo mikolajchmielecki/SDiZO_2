@@ -81,7 +81,7 @@ d. dla problemu MST krawêdzie traktowane s¹ jako nieskierowane, natomiast dla
 algorytmów najkrótszej œcie¿ki i maksymalnego przep³ywu jako skierowane,
 
 */
-IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu) {
+IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu, bool czyDuplikaty) {
 	ifstream plik;
 	plik.open(sciezka);
 	IGraf* graf = nullptr;
@@ -141,10 +141,10 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 			throw exception("[ERROR] B³¹d wczytania rozmiaru grafu z pliku");
 		else {
 			if (reprezentacja == ReprezentacjaGrafu::LISTA) {
-				graf = new GrafLista(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, typAlgorytmu != TypAlgorytmu::MST);
+				graf = new GrafLista(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, czyDuplikaty, typAlgorytmu);
 			}
 			else if (reprezentacja == ReprezentacjaGrafu::MACIERZ) {
-				graf = new GrafMacierz(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, typAlgorytmu != TypAlgorytmu::MST);
+				graf = new GrafMacierz(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, czyDuplikaty, typAlgorytmu);
 			}
 
 		}
@@ -162,10 +162,12 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 				throw exception("[ERROR] Pocz¹tek i koniec krawêdzi to ten sam wierzcho³ek");
 			}
 
+			/*
 			// dla grafów nieskierowanych pocz¹tek musi byæ wiêkszy od koñca
 			if (typAlgorytmu == TypAlgorytmu::MST && krawedzTablica[0] < krawedzTablica[1]) {
 				swap(krawedzTablica[0], krawedzTablica[1]);
 			}
+			*/
 
 			graf->dodajKrawedz(krawedzTablica[0], krawedzTablica[1], krawedzTablica[2]);
 			delete krawedzTablica;

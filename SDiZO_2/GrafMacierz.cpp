@@ -1,12 +1,12 @@
 #include "GrafMacierz.h"
 
-GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czySkierowany) {
+GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypAlgorytmu typAlgorytmu) {
 	
 	this->liczbaKrawedzi = liczbaKrawedzi;
 	this->liczbaWierzcholkow = liczbaWierzcholkow;
 	this->wierzcholekStartowy = wierzcholekStartowy;
 	this->wierzcholekKoncowy = wierzcholekKoncowy;
-	this->czySkierowany = czySkierowany;
+	this->czyDuplikaty = czyDuplikaty;
 	macierz = new Tablica<Tablica<int>*>(liczbaWierzcholkow);
 	for (int i = 0; i < liczbaWierzcholkow; i++) {
 		macierz->tablica[i] = new Tablica<int>(liczbaWierzcholkow);
@@ -16,6 +16,14 @@ GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzch
 	}
 	iteratorKolumna = 0;
 	iteratorRzad = 0;
+	iteratorSasiad = 0;
+	iteratorWierzcholek = 0;
+
+	this->typAlgorytmu = typAlgorytmu;
+	this->czySkierowany = true;
+	if (typAlgorytmu == TypAlgorytmu::MST) {
+		this->czySkierowany = false;
+	}
 }
 
 /*
@@ -32,17 +40,23 @@ GrafMacierz::~GrafMacierz() {
 
 /*
 Dodaje krawedŸ do macierzy
-W przypadku kiedy graf jest nieskierowany to wype³aniony jest tylko lewy dolny trjójkat macierzy
+W przypadku kiedy graf jest nieskierowany oraz oczekujemy duplikatów to wypa³eniamy podwójnie
+W przypadku keidy graf jest nieskierowany oraz nie oczekujemy duplikatów to wype³niany lewy dolny trójk¹
 
 */
 void GrafMacierz::dodajKrawedz(int start, int koniec, int waga) {
 	sprawdzKrawedz(start, koniec, waga);
-	macierz->tablica[start]->tablica[koniec] = waga;
-	/*
+	
 	if (!czySkierowany) {
+		if (start < koniec) {
+			swap(start, koniec);
+		}
+	}
+	if (!czySkierowany && czyDuplikaty) {
 		macierz->tablica[koniec]->tablica[start] = waga;
 	}
-	*/
+	macierz->tablica[start]->tablica[koniec] = waga;
+	
 }
 
 /*
@@ -103,12 +117,38 @@ Krawedz* GrafMacierz::nastepnaKrawedz() {
 	return nullptr;
 }
 
-void GrafMacierz::inicjalizujIteratorSasiadow(int wierzcholek)
-{
+void GrafMacierz::inicjalizujIteratorSasiadow(int wierzcholek) {
+	iteratorWierzcholek = wierzcholek;
+	iteratorSasiad = 0;
 }
 
-Krawedz* GrafMacierz::nastepnySasiad()
-{
+Krawedz* GrafMacierz::nastepnySasiad() {
+	// sprawdzenie czy w poprzednim wywo³aniu nie wyszliœmy poza zakres
+	if (iteratorSasiad >= liczbaWierzcholkow && czyDuplikaty) {
+		return nullptr;
+	}
+
+	// sprawdzenie czy w poprzednim wywo³aniu nie wyszliœmy poza lewy dolny trójk¹t
+	if (iteratorSasiad >= iteratorWierzcholek && !czyDuplikaty) {
+		return nullptr;
+	}
+
+
+
+
+	for (; iteratorSasiad < liczbaWierzcholkow; iteratorSasiad++) {
+
+		// je¿eli dana krawedŸ istnieje do j¹ zwracamy
+		int waga = macierz->tablica[iteratorWierzcholek]->tablica[iteratorSasiad];
+		if (waga != INT_MAX) {
+
+			// przejœcie do kolejnej komórki
+			iteratorSasiad++;
+
+			return new Krawedz(iteratorWierzcholek, iteratorSasiad - 1, waga);
+		}
+	}
+
 	return nullptr;
 }
 

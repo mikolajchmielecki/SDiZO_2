@@ -1,11 +1,17 @@
 #include "GrafLista.h"
 
-GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czySkierowany) {
+
+/*
+Parametr czyDuplikaty jest potrzebny dla algorytmów MST
+Algorytm Prima wczytuje podwójnie krawedzie
+Algorytm Kruskala wczytuje pojedyczno krawedzie
+*/
+GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypAlgorytmu typAlgorytmu) {
 	this->liczbaKrawedzi = liczbaKrawedzi;
 	this->liczbaWierzcholkow = liczbaWierzcholkow;
 	this->wierzcholekStartowy = wierzcholekStartowy;
 	this->wierzcholekKoncowy = wierzcholekKoncowy;
-	this->czySkierowany = czySkierowany;
+	this->czyDuplikaty = czyDuplikaty;
 	tablicaList = new Tablica<Lista<Sasiad*>*>(liczbaWierzcholkow);
 	for (int i = 0; i < liczbaWierzcholkow; i++) {
 		tablicaList->tablica[i] = new Lista<Sasiad*>;
@@ -13,6 +19,11 @@ GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholek
 
 	iteratorRzad = 0;
 	iteratorKolumna = nullptr;
+	this->typAlgorytmu = typAlgorytmu;
+	this->czySkierowany = true;
+	if (typAlgorytmu == TypAlgorytmu::MST) {
+		this->czySkierowany = false;
+	}
 }
 
 GrafLista::~GrafLista() {
@@ -60,16 +71,20 @@ string GrafLista::toString() {
 /*
 Dodaje krawedz do listy sasiedztwa.
 Wstawia danego s¹siada na pocz¹tek listy s¹siedztwa.
+Je¿eli graf jest nieskierowany i oczekujemy duplikatów to dodajemy krawedzie podwójnie
 */
 void GrafLista::dodajKrawedz(int start, int koniec, int waga) {
 	sprawdzKrawedz(start, koniec, waga);
+	
+
+
 	Sasiad* sasiad = new Sasiad;
 	sasiad->numerWierzcholka = koniec;
 	sasiad->waga = waga;
 	tablicaList->tablica[start]->dodajPoczatek(sasiad);
 
 	
-	if (!czySkierowany) {
+	if (!czySkierowany && czyDuplikaty) {
 		Sasiad* sasiad = new Sasiad;
 		sasiad->numerWierzcholka = start;
 		sasiad->waga = waga;
@@ -88,13 +103,10 @@ void GrafLista::inicjalizujIteratorKrawedzi() {
 /*
 Zwracanie nastêpnej krawêdzi z kolejki
 */
+
+// TODO: do poprawy dla grafu nieskierowanego
 Krawedz* GrafLista::nastepnaKrawedz() {
 	int maksymalnyRzad = liczbaWierzcholkow;
-
-	// bierzemy tylko pod uwage pierwsz¹ po³owê wierzcho³ków, gdy¿ krawedzie s¹ zapisane podwójnie
-	if (czySkierowany == false) {
-		maksymalnyRzad = (liczbaWierzcholkow + 1)/ 2;
-	}
 
 	if (iteratorRzad >= maksymalnyRzad) {
 		return nullptr;
@@ -117,12 +129,19 @@ Krawedz* GrafLista::nastepnaKrawedz() {
 	return nullptr;
 }
 
-void GrafLista::inicjalizujIteratorSasiadow(int wierzcholek)
-{
+void GrafLista::inicjalizujIteratorSasiadow(int wierzcholek) {
+	iteratorKolumna = tablicaList->tablica[wierzcholek]->glowa;
 }
 
-Krawedz* GrafLista::nastepnySasiad()
-{
+/*
+Zwraca nastêpnego s¹siada z listy
+*/
+Krawedz* GrafLista::nastepnySasiad() {
+	if (iteratorKolumna != nullptr) {
+		ElementListy<Sasiad*>* iteratorKolumnaTemp = iteratorKolumna;
+		iteratorKolumna = iteratorKolumna->nastepny;
+		return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga);
+	}
 	return nullptr;
 }
 

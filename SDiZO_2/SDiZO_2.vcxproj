@@ -28,12 +28,16 @@
     <ClCompile Include="IGraf.cpp" />
     <ClCompile Include="KolejkaPriorytetowa.cpp" />
     <ClCompile Include="Krawedz.cpp" />
+    <ClCompile Include="Kruskal.cpp" />
     <ClCompile Include="Lista.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MST.cpp" />
+    <ClCompile Include="Prim.cpp" />
     <ClCompile Include="SP.cpp" />
     <ClCompile Include="Struktura.cpp" />
     <ClCompile Include="Tablica.cpp" />
+    <ClCompile Include="Zbior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BellmanFord.h" />
@@ -45,13 +49,17 @@
     <ClInclude Include="IGraf.h" />
     <ClInclude Include="KolejkaPriorytetowa.h" />
     <ClInclude Include="Krawedz.h" />
+    <ClInclude Include="Kruskal.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Lista.h" />
+    <ClInclude Include="MST.h" />
     <ClInclude Include="MySTL.h" />
+    <ClInclude Include="Prim.h" />
     <ClInclude Include="SP.h" />
     <ClInclude Include="Struktura.h" />
     <ClInclude Include="Tablica.h" />
     <ClInclude Include="Typy.h" />
+    <ClInclude Include="Zbior.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

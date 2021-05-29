@@ -1,16 +1,16 @@
-#include "Dijkstra.h"
+#include "Prim.h"
 
 
-/*
-zabezpieczenieMinus - je¿eli true to przerywa dzia³anie algorytmu w momencie wykrycia ujemnej wagi
-*/
-Dijkstra::Dijkstra(IGraf* graf, bool zabezpieczenieMinus) {
+Prim::Prim(IGraf* graf) {
 	this->graf = graf;
-	this->zabezpieczenieMinus = zabezpieczenieMinus;
-	info = "Nie wykryto ujemnej wagi.";
 }
 
-Dijkstra::~Dijkstra() {
+Prim::~Prim() {
+	for (int i = 0; i < krawedzieMST->getRozmiar(); i++) {
+		delete krawedzieMST->tablica[i];
+	}
+	delete krawedzieMST;
+
 	// zwalnianie pamiêci zajmowanej prze struktury
 	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
 		delete wierzcholki->tablica[i];
@@ -18,7 +18,7 @@ Dijkstra::~Dijkstra() {
 	delete wierzcholki;
 }
 
-void Dijkstra::uruchom() {
+void Prim::uruchom() {
 	// kopiec odleg³oœci oraz poprzedników
 	wierzcholki = new Tablica<Struktura*>(graf->liczbaWierzcholkow);
 
@@ -41,18 +41,10 @@ void Dijkstra::uruchom() {
 		// sprawdzanie kazdego sasiada
 		while (krawedz != nullptr) {
 
-			if (krawedz->waga < 0) {
-				info = "Uwaga - wykryto ujemn¹ wagê. Wynik mo¿e byæ nieprawid³owy";
-				if (zabezpieczenieMinus) {
-					throw exception("[ERROR] Wykryto ujemn¹ wagê");
-				}
-
-			}
-
 			int sasiad = krawedz->koniec;
 			int staraOdleglosc = kolejka->getWierzcholek(sasiad)->klucz;
-			int nowaOdleglosc = kolejka->getWierzcholek(minimum->wierzcholek)->klucz + krawedz->waga;
-			if (staraOdleglosc > nowaOdleglosc) {
+			int nowaOdleglosc = krawedz->waga;
+			if (kolejka->czyWierzcholekWKolejce(sasiad) && staraOdleglosc > nowaOdleglosc) {
 				// relaksacja
 				kolejka->getWierzcholek(sasiad)->klucz = nowaOdleglosc;
 				kolejka->getWierzcholek(sasiad)->poprzednik = minimum->wierzcholek;
@@ -65,4 +57,37 @@ void Dijkstra::uruchom() {
 
 	wierzcholki = kolejka->naprawTablice();
 	delete kolejka;
+
+
+	//przygotowtywanie wyniku koñcowego
+	// rezerwacja miejsca na krawedzie MST
+	krawedzieMST = new Tablica<Krawedz*>(graf->liczbaWierzcholkow - 1);
+
+	int iteratorKrawedzi = 0;
+	// wyznaczanie krawedzi wchodzacych w sk³ad MST
+	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+		int sasiad = wierzcholki->tablica[i]->poprzednik;
+		if (sasiad != -1) {
+
+			// pocz¹tek krawedzi to mniejszy wierzcholek
+			int start = -1;
+			int koniec = -1;
+			if (i < sasiad) {
+				start = i;
+				koniec = sasiad;
+			}
+			else {
+				start = sasiad;
+				koniec = i;
+			}
+			Krawedz* krawedz = new Krawedz(start, koniec, wierzcholki->tablica[i]->klucz);
+			krawedzieMST->tablica[iteratorKrawedzi] = krawedz;
+			iteratorKrawedzi++;
+		}
+	}
+
 }
+
+
+
+
