@@ -20,6 +20,16 @@ public:
 	virtual void dodajKrawedz(int start, int koniec, int waga) = 0;
 	virtual string toString() = 0;
 
+	/*
+	Inicjalzuje wszytkie przeplywy na 0
+	*/
+	virtual void inicjalizujPrzeplywy() = 0;
+
+	/*
+	Dodaje zmianê do akualnego przeplywu
+	*/
+	virtual void zmienPrzeplyw(int start, int koniec, int zmianaPrzeplywu) = 0;
+
 
 	virtual void inicjalizujIteratorKrawedzi() = 0;
 	virtual Krawedz* nastepnaKrawedz() = 0;
@@ -31,6 +41,6 @@ protected:
 	void sprawdzKrawedz(int start, int koniec, int waga);
 	string wyrownajString(string liczbaString, int szerokosc);
 	string powielZnak(char znak, int powtorzenia);
-
+	TypAlgorytmu typAlgorytmu;
 };
 

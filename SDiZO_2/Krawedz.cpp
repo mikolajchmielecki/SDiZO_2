@@ -1,9 +1,10 @@
 #include "Krawedz.h"
 
-Krawedz::Krawedz(int start, int koniec, int waga) {
+Krawedz::Krawedz(int start, int koniec, int waga, int przeplyw) {
 	this->start = start;
 	this->koniec = koniec;
 	this->waga = waga;
+	this->przeplyw = przeplyw;
 }
 
 string Krawedz::toString() {

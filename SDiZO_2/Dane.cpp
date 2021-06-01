@@ -7,7 +7,7 @@ using namespace std;
 
 Dane::Dane() {
 	liczbaOpcji = 2;
-	sciezka = "dane.txt";
+	sciezka = "ford.txt";
 }
 
 void Dane::menu() {
@@ -152,13 +152,25 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 		for (int i = 0; i < liczbaKrawedzi; i++) {
 			string linia = "";
 			getline(plik, linia);
-			if (plik.fail())
+			if (plik.fail()) {
+				delete graf;
 				throw exception("[ERROR] B³¹d wczytania krawêdzi");
+			}
 
-			int* krawedzTablica = podzielInt(3, linia);
+			int* krawedzTablica = nullptr;
+			try {
+				krawedzTablica = podzielInt(3, linia);
+			}
+			catch (exception e) {
+				delete krawedzTablica;
+				delete graf;
+				throw exception(e.what());
+			}
+				
 
 			// nie akceptujemy krawêdzi miêdzy tym samym wierzcho³kiem
 			if (krawedzTablica[0] == krawedzTablica[1]) {
+				delete graf;
 				throw exception("[ERROR] Pocz¹tek i koniec krawêdzi to ten sam wierzcho³ek");
 			}
 
@@ -168,9 +180,19 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 				swap(krawedzTablica[0], krawedzTablica[1]);
 			}
 			*/
-
-			graf->dodajKrawedz(krawedzTablica[0], krawedzTablica[1], krawedzTablica[2]);
+			int start = krawedzTablica[0];
+			int koniec = krawedzTablica[1];
+			int waga = krawedzTablica[2];
 			delete krawedzTablica;
+
+			try {
+				graf->dodajKrawedz(start, koniec, waga);
+			}
+			catch (exception e) {
+				delete graf;
+				throw exception(e.what());
+			}
+			
 		}
 
 		plik.close();

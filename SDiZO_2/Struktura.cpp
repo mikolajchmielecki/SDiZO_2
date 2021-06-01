@@ -1,7 +1,7 @@
 #include "Struktura.h"
 
-Struktura::Struktura() {
+Struktura::Struktura(int klucz) {
 	poprzednik = -1;
-	klucz = INT_MAX;
+	this->klucz = klucz;
 	wierzcholek = -1;
 }

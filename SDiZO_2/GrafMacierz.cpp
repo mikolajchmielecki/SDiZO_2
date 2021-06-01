@@ -14,6 +14,8 @@ GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzch
 			macierz->tablica[i]->tablica[j] = INT_MAX;
 		}
 	}
+
+
 	iteratorKolumna = 0;
 	iteratorRzad = 0;
 	iteratorSasiad = 0;
@@ -34,6 +36,13 @@ GrafMacierz::~GrafMacierz() {
 		delete macierz->tablica[i];
 	}
 	delete macierz;
+
+	if (typAlgorytmu == TypAlgorytmu::MF) {
+		for (int i = 0; i < liczbaWierzcholkow; i++) {
+			delete macierzPrzeplywow->tablica[i];
+		}
+		delete macierzPrzeplywow;
+	}
 }
 
 
@@ -53,7 +62,13 @@ void GrafMacierz::dodajKrawedz(int start, int koniec, int waga) {
 		}
 	}
 	if (!czySkierowany && czyDuplikaty) {
+		if (macierz->tablica[koniec]->tablica[start] != INT_MAX) {
+			throw exception("[ERROR] Wyst¹pi³o redefiniowanie krawedzi");
+		}
 		macierz->tablica[koniec]->tablica[start] = waga;
+	}
+	if (macierz->tablica[start]->tablica[koniec] != INT_MAX) {
+		throw exception("[ERROR] Wyst¹pi³o redefiniowanie krawedzi");
 	}
 	macierz->tablica[start]->tablica[koniec] = waga;
 	
@@ -108,6 +123,10 @@ Krawedz* GrafMacierz::nastepnaKrawedz() {
 
 				// przejœcie do kolejnej komórki
 				iteratorKolumna++;
+				if (typAlgorytmu == TypAlgorytmu::MF) {
+					int przeplyw = macierzPrzeplywow->tablica[iteratorRzad]->tablica[iteratorKolumna - 1];
+					return new Krawedz(iteratorRzad, iteratorKolumna - 1, waga, przeplyw);
+				}
 
 				return new Krawedz(iteratorRzad, iteratorKolumna-1, waga);
 			}
@@ -145,11 +164,50 @@ Krawedz* GrafMacierz::nastepnySasiad() {
 			// przejœcie do kolejnej komórki
 			iteratorSasiad++;
 
-			return new Krawedz(iteratorWierzcholek, iteratorSasiad - 1, waga);
+			if (typAlgorytmu == TypAlgorytmu::MF) {
+				int przeplyw = macierzPrzeplywow->tablica[iteratorWierzcholek]->tablica[iteratorSasiad-1];
+				return new Krawedz(iteratorWierzcholek, iteratorSasiad - 1, waga, przeplyw);
+			}
+			else {
+				return new Krawedz(iteratorWierzcholek, iteratorSasiad - 1, waga);
+			}
+			
 		}
 	}
 
 	return nullptr;
+}
+
+/*
+Je¿eli przepustowosc = inf to uznajemy ze nie mamy krawedzi
+Tworzymy symetryczne krawedzie i przepustowosciach 0
+Inicjalizujemy wszystkie przeplywy na 0
+*/
+void GrafMacierz::inicjalizujPrzeplywy() {
+	for (int i = 0; i < liczbaWierzcholkow; i++) {
+		for (int j = 0; j < liczbaWierzcholkow; j++) {
+			int przepustowosc = macierz->tablica[i]->tablica[j];
+			if (przepustowosc != INT_MAX && przepustowosc != 0) {
+				int przepustowosc1 = macierz->tablica[j]->tablica[i];
+				if (przepustowosc1 == INT_MAX) {
+					macierz->tablica[j]->tablica[i] = 0;
+					liczbaKrawedzi++;
+				}
+			}
+		}
+	}
+
+	macierzPrzeplywow = new Tablica<Tablica<int>*>(liczbaWierzcholkow);
+	for (int i = 0; i < liczbaWierzcholkow; i++) {
+		macierzPrzeplywow->tablica[i] = new Tablica<int>(liczbaWierzcholkow);
+		for (int j = 0; j < liczbaWierzcholkow; j++) {
+			macierzPrzeplywow->tablica[i]->tablica[j] = 0;
+		}
+	}
+}
+
+void GrafMacierz::zmienPrzeplyw(int start, int koniec, int zmianaPrzeplywu) {
+	macierzPrzeplywow->tablica[start]->tablica[koniec] += zmianaPrzeplywu;
 }
 
 /*

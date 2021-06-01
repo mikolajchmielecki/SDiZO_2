@@ -26,7 +26,7 @@ void BellmanFord::uruchom() {
 	}
 
 	// inicjalizacja wierzcho³ka pocz¹tkowego
-	wierzcholki->tablica[0]->klucz = 0;
+	wierzcholki->tablica[graf->wierzcholekStartowy]->klucz = 0;
 
 	// pêtla która wykona siê maksymalnie liczbaWierzcho³kow-1
 	// mo¿e zostaæ wczeœniej przerwana jeœli nie bêdzie ¿adnej relaksacji
@@ -68,7 +68,7 @@ void BellmanFord::uruchom() {
 		int odleglosc1 = wierzcholki->tablica[krawedz->koniec]->klucz;
 		int odleglosc2 = wierzcholki->tablica[krawedz->start]->klucz;
 		if (odleglosc1 > odleglosc2 + krawedz->waga) {
-			throw exception("[ERROR] Wykryto cykl ujemny");
+			throw exception("[ERROR] Wykryto cykl ujemny lub graf jest niespójny");
 		}
 		delete krawedz;
 		krawedz = graf->nastepnaKrawedz();

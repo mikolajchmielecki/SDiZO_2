@@ -12,6 +12,7 @@
 #include "Dijkstra.h"
 #include "Kruskal.h"
 #include "Prim.h"
+#include "FordFulkerson.h"
 
 
 // SP - shortest path
@@ -29,8 +30,8 @@ string opcjeSP[] = { "Algorytm Dijsktry", "Algorytm Bellmana-Forda", "Wyœwietl g
 int liczbaOpcjiMST = 3;
 string opcjeMST[] = { "Algorytm Prima", "Algorytm Kurskala", "Wyœwietl graf" };
 
-int liczbaOpcjiMF = 2;
-string opcjeMF[] = { "Algorytm Forda-Fulkresona", "Algorytm Kurskala", "Wyœwietl graf" };
+int liczbaOpcjiMF = 3;
+string opcjeMF[] = { "Algorytm Forda-Fulkresona BFS", "Algorytm Forda-Fulkresona DFS", "Wyœwietl graf" };
 
 int liczbaOpcjiReprezentacja = 2;
 string opcjeReprezentacja[] = { "Macierz s¹siedztwa", "Lista s¹siedztwa" };
@@ -39,6 +40,7 @@ string opcjeReprezentacja[] = { "Macierz s¹siedztwa", "Lista s¹siedztwa" };
 
 void menuSP(Dane*);
 void menuMST(Dane*);
+void menuMF(Dane*);
 bool czyPrzed(int a, int b) {
 	return a > b;
 }
@@ -67,9 +69,8 @@ int main() {
 			menuMST(dane);
 			break;
 		case 2:
-		{
-		}
-		break;
+			menuMF(dane);
+			break;
 		case 3:
 		{
 			dane->menu();
@@ -104,48 +105,56 @@ IGraf* wczytajGraf(Dane* dane, ReprezentacjaGrafu reprezentacja, TypAlgorytmu ty
 void menuSP(Dane* dane) {
 	TypAlgorytmu typ = TypAlgorytmu::SP;
 	Menu menu = Menu(liczbaOpcjiSP, opcjeSP, "Najkrótsza œcie¿ka");
-	IGraf* graf = nullptr;
-	BellmanFord* bellmanFord = nullptr;
-	Dijkstra* dijkstra = nullptr;
+	
+	
 	
 	while (menu.czyUruchomione()) {
+		IGraf* graf = nullptr;
 		switch (menu.wyswietl()) {
 		case 0:
-			
+		{
+			Dijkstra* dijkstra = nullptr;
 			try {
-				dijkstra = new Dijkstra(wczytajGraf(dane, wyborReprezentacji(), typ, true), false);
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				dijkstra = new Dijkstra(graf, false);
 				dijkstra->uruchom();
 				cout << endl << endl << "Wynika dzia³ania algorytmu Dijkstry:" << endl << dijkstra->getWynik();
+			}
+			catch (exception e) {
+				cout << e.what() << endl;
+			}
+			if (dijkstra != nullptr) {
 				delete dijkstra;
 			}
-			catch (exception e) {
-				cout << e.what() << endl;
-			}
-			
 			break;
+		}
 		case 1:
-			
+		{
+			BellmanFord* bellmanFord = nullptr;
 			try {
-				bellmanFord = new BellmanFord(wczytajGraf(dane, wyborReprezentacji(), typ, true));
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				bellmanFord = new BellmanFord(graf);
 				bellmanFord->uruchom();
 				cout << endl << endl << "Wynika dzia³ania algorytmu Bellmana-Forda:" << endl << bellmanFord->getWynik();
-				delete bellmanFord;
 			}
 			catch (exception e) {
 				cout << e.what() << endl;
 			}
-			
+			if (bellmanFord != nullptr) {
+				delete bellmanFord;
+			}
 			break;
+		}
 		case 2:
 			try {
-				cout << wczytajGraf(dane, wyborReprezentacji(), typ, true)->toString();
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				cout << graf->toString();
 			}
 			catch (exception e) {
 				cout << e.what() << endl;
 			}
 			break;
 		}
-
 		if (graf != nullptr) {
 			delete graf;
 		}
@@ -157,53 +166,126 @@ void menuSP(Dane* dane) {
 void menuMST(Dane* dane) {
 	TypAlgorytmu typ = TypAlgorytmu::MST;
 	Menu menu = Menu(liczbaOpcjiMST, opcjeMST, "Minimalne drzewo rozpinaj¹ce");
-	IGraf* graf = nullptr;
-	Prim* prim = nullptr;
-	Kruskal* kruskal = nullptr;
+	
+	
 
 	while (menu.czyUruchomione()) {
+		IGraf* graf = nullptr;
 		switch (menu.wyswietl()) {
 		case 0:
-
+		{
+			Prim* prim = nullptr;
 			try {
-				prim = new Prim(wczytajGraf(dane, wyborReprezentacji(), typ, true));
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				prim = new Prim(graf);
 				prim->uruchom();
 				cout << endl << endl << "Wynika dzia³ania algorytmu Prima:" << endl << prim->getWynik();
+			}
+			catch (exception e) {
+				cout << e.what() << endl;
+			}
+			if (prim != nullptr) {
 				delete prim;
 			}
-			catch (exception e) {
-				cout << e.what() << endl;
-			}
-
 			break;
+		}
 		case 1:
-
+		{
+			Kruskal* kruskal = nullptr;
 			try {
-				kruskal = new Kruskal(wczytajGraf(dane, wyborReprezentacji(), typ, false));
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, false);
+				kruskal = new Kruskal(graf);
 				kruskal->uruchom();
 				cout << endl << endl << "Wynika dzia³ania algorytmu Kruskala:" << endl << kruskal->getWynik();
-				delete kruskal;
 			}
 			catch (exception e) {
 				cout << e.what() << endl;
 			}
-
+			if (kruskal != nullptr) {
+				delete kruskal;
+			}
 			break;
+		}
 		case 2:
 			try {
 				ReprezentacjaGrafu reprezentacja = wyborReprezentacji();
+				graf = wczytajGraf(dane, reprezentacja, typ, true);
 				cout << "Dla algorytmu Prima:" << endl;
-				cout << wczytajGraf(dane, reprezentacja, typ, true)->toString();
+				cout << graf->toString();
+				delete graf;
 				cout << endl;
 				cout << "Dla algorytmu Kruskala:" << endl;
-				cout << wczytajGraf(dane, reprezentacja, typ, false)->toString();
+				graf = wczytajGraf(dane, reprezentacja, typ, false);
+				cout << graf->toString();
 			}
 			catch (exception e) {
 				cout << e.what() << endl;
 			}
 			break;
 		}
+		if (graf != nullptr) {
+			delete graf;
+		}
+	}
+}
 
+void menuMF(Dane* dane) {
+	TypAlgorytmu typ = TypAlgorytmu::MF;
+	Menu menu = Menu(liczbaOpcjiMF, opcjeMF, "Maksymalny przep³yw");
+	
+
+	while (menu.czyUruchomione()) {
+		IGraf* graf = nullptr;
+		switch (menu.wyswietl()) {
+		case 0:
+		{
+			FordFulkerson* fordFulkerson = nullptr;
+			try {
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				fordFulkerson = new FordFulkerson(graf, TrybPrzeszukiwania::BFS);
+				fordFulkerson->uruchom();
+				cout << endl << endl << "Wynika dzia³ania algorytmu Forda-Fulekrsona:" << endl << fordFulkerson->getWynik();
+
+			}
+			catch (exception e) {
+				cout << e.what() << endl;
+			}
+			if (fordFulkerson != nullptr) {
+				delete fordFulkerson;
+			}
+			break;
+		}
+		case 1:
+		{
+			FordFulkerson* fordFulkerson = nullptr;
+			try {
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				fordFulkerson = new FordFulkerson(graf, TrybPrzeszukiwania::DFS);
+				fordFulkerson->uruchom();
+				cout << endl << endl << "Wynika dzia³ania algorytmu Forda-Fulekrsona:" << endl << fordFulkerson->getWynik();
+
+			}
+			catch (exception e) {
+				cout << e.what() << endl;
+			}
+			if (fordFulkerson != nullptr) {
+				delete fordFulkerson;
+			}
+			break;
+		}
+		case 2:
+			try {
+				graf = wczytajGraf(dane, wyborReprezentacji(), typ, true);
+				graf->inicjalizujPrzeplywy();
+				cout << graf->toString();
+				
+			}
+			catch (exception e) {
+				cout << e.what() << endl;
+			}
+			
+			break;
+		}
 		if (graf != nullptr) {
 			delete graf;
 		}

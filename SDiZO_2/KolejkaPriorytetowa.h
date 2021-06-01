@@ -14,7 +14,7 @@ Implementacja kopca typu MAX
 */
 class KolejkaPriorytetowa {
 public:
-	KolejkaPriorytetowa(Tablica<Struktura*>* tablica);
+	KolejkaPriorytetowa(Tablica<Struktura*>* tablica, int wierzcholekStartowy = 0);
 	~KolejkaPriorytetowa();
 	Struktura* usunMinimum();
 	Tablica<Struktura*>* kopiec;

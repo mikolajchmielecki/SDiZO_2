@@ -28,9 +28,9 @@ void Dijkstra::uruchom() {
 	}
 
 	// inicjalizacja wierzcho³ka pocz¹tkowego
-	wierzcholki->tablica[0]->klucz = 0;
+	wierzcholki->tablica[graf->wierzcholekStartowy]->klucz = 0;
 
-	KolejkaPriorytetowa* kolejka = new KolejkaPriorytetowa(wierzcholki);
+	KolejkaPriorytetowa* kolejka = new KolejkaPriorytetowa(wierzcholki, graf->wierzcholekStartowy);
 
 	while (kolejka->rozmiar > 0) {
 		Struktura* minimum = kolejka->usunMinimum();

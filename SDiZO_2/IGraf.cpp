@@ -4,6 +4,10 @@ void IGraf::sprawdzKrawedz(int start, int koniec, int waga) {
 	if (start < 0 || koniec < 0 || start > liczbaWierzcholkow - 1 || koniec > liczbaWierzcholkow - 1 || waga == INT_MAX) {
 		throw exception("[ERROR] B³¹d wczytania krawêdzi");
 	}
+
+	if (typAlgorytmu == TypAlgorytmu::MF && waga <= 0) {
+		throw exception("[ERROR] Niedodatni przep³yw");
+	}
 }
 
 /*

@@ -76,11 +76,17 @@ Je¿eli graf jest nieskierowany i oczekujemy duplikatów to dodajemy krawedzie pod
 void GrafLista::dodajKrawedz(int start, int koniec, int waga) {
 	sprawdzKrawedz(start, koniec, waga);
 	
-
-
 	Sasiad* sasiad = new Sasiad;
 	sasiad->numerWierzcholka = koniec;
 	sasiad->waga = waga;
+	sasiad->przeplyw = 0;
+
+	if (czySasiedzi(start, koniec)) {
+		throw exception("[ERROR] Wyst¹pi³o redefiniowanie krawedzi");
+	}
+	if (!czySkierowany && czySasiedzi(koniec, start)) {
+		throw exception("[ERROR] Wyst¹pi³o redefiniowanie krawedzi");
+	}
 	tablicaList->tablica[start]->dodajPoczatek(sasiad);
 
 	
@@ -88,6 +94,10 @@ void GrafLista::dodajKrawedz(int start, int koniec, int waga) {
 		Sasiad* sasiad = new Sasiad;
 		sasiad->numerWierzcholka = start;
 		sasiad->waga = waga;
+		sasiad->przeplyw = 0;
+		if (czySasiedzi(koniec, start)) {
+			throw exception("[ERROR] Wyst¹pi³o redefiniowanie krawedzi");
+		}
 		tablicaList->tablica[koniec]->dodajPoczatek(sasiad);
 	}
 	
@@ -117,6 +127,10 @@ Krawedz* GrafLista::nastepnaKrawedz() {
 		if (iteratorKolumna != nullptr) {
 			ElementListy<Sasiad*>* iteratorKolumnaTemp = iteratorKolumna;
 			iteratorKolumna = iteratorKolumna->nastepny;
+			if (typAlgorytmu == TypAlgorytmu::MF) {
+				return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga, iteratorKolumnaTemp->element->przeplyw);
+			}
+
 			return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga);
 		}
 		// przejscie do nastêpnej listy
@@ -130,6 +144,7 @@ Krawedz* GrafLista::nastepnaKrawedz() {
 }
 
 void GrafLista::inicjalizujIteratorSasiadow(int wierzcholek) {
+	iteratorRzad = wierzcholek;
 	iteratorKolumna = tablicaList->tablica[wierzcholek]->glowa;
 }
 
@@ -140,9 +155,65 @@ Krawedz* GrafLista::nastepnySasiad() {
 	if (iteratorKolumna != nullptr) {
 		ElementListy<Sasiad*>* iteratorKolumnaTemp = iteratorKolumna;
 		iteratorKolumna = iteratorKolumna->nastepny;
-		return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga);
+
+		if (typAlgorytmu == TypAlgorytmu::MF) {
+			return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga, iteratorKolumnaTemp->element->przeplyw);
+		}
+		else {
+			return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga);
+		}
 	}
 	return nullptr;
+}
+
+void GrafLista::inicjalizujPrzeplywy() {
+	// dla ka¿dego wierzcholka
+	for (int i = 0; i < liczbaWierzcholkow; i++) {
+		inicjalizujIteratorSasiadow(i);
+		Krawedz* krawedz = nastepnySasiad();
+		// dla ka¿dego sasiada i
+		while (krawedz != nullptr) {
+
+			// dodanie krawedzi zwrotnych jesli nie istnieja
+			int sasiad_id = krawedz->koniec;
+			if (czySasiedzi(sasiad_id, i) == false) {
+				Sasiad* sasiad = new Sasiad;
+				sasiad->przeplyw = 0;
+				sasiad->numerWierzcholka = i;
+				sasiad->waga = 0;
+				tablicaList->tablica[sasiad_id]->dodajPoczatek(sasiad);
+				liczbaKrawedzi++;
+			}
+
+
+			delete krawedz;
+			krawedz = nastepnySasiad();
+		}
+	}
+
+}
+
+void GrafLista::zmienPrzeplyw(int start, int koniec, int zmianaPrzeplywu) {
+	ElementListy<Sasiad*>* iteratorKolumna = tablicaList->tablica[start]->glowa;
+	while (iteratorKolumna != nullptr) {
+		if (iteratorKolumna->element->numerWierzcholka == koniec) {
+			iteratorKolumna->element->przeplyw += zmianaPrzeplywu;
+			return;
+		}
+		iteratorKolumna = iteratorKolumna->nastepny;
+	}
+	throw exception("[ERROR] Brak wierzcho³ka na liœcie s¹siadów");
+}
+
+bool GrafLista::czySasiedzi(int start, int koniec) {
+	ElementListy<Sasiad*>* iteratorKolumna = tablicaList->tablica[start]->glowa;
+	while (iteratorKolumna != nullptr) {
+		if (iteratorKolumna->element->numerWierzcholka == koniec) {
+			return true;
+		}
+		iteratorKolumna = iteratorKolumna->nastepny;
+	}
+	return false;
 }
 
 

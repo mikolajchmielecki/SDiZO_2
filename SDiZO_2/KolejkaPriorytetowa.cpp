@@ -7,7 +7,7 @@ Tworzy kopiec kopiuj¹c dane z tablicy dynamicznej
 Zak³ada, ¿e pocz¹tkowo kopiec jest zbudowany
 W u¿ywanych algorytmach tak faktycznie jest
 */
-KolejkaPriorytetowa::KolejkaPriorytetowa(Tablica<Struktura*>* tablica) {
+KolejkaPriorytetowa::KolejkaPriorytetowa(Tablica<Struktura*>* tablica, int wierzcholekStartowy) {
 	this->kopiec = tablica;
 	this->rozmiar = tablica->getRozmiar();
 
@@ -22,6 +22,8 @@ KolejkaPriorytetowa::KolejkaPriorytetowa(Tablica<Struktura*>* tablica) {
 	for (int i = 0; i < czyZawiera->getRozmiar(); i++) {
 		czyZawiera->tablica[i] = true;
 	}
+
+	zamien(0, wierzcholekStartowy);
 }
 
 

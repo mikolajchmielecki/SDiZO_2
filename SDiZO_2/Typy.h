@@ -11,3 +11,8 @@ Wykorzystuje siê go do definiowania liczby wczytaywanych danych z pierwszej lini
 */
 enum class TypAlgorytmu { MST, SP, MF, DEFAULT };
 
+/*
+Okreœla sposób przeszukiwania dla algorytmu Forda-Fulkersona
+*/
+enum class TrybPrzeszukiwania {BFS, DFS};
+

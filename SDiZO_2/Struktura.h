@@ -5,7 +5,7 @@ Struktura danych przechowuj¹ce informacje niezbêdne podczas dzia³ania algorytmów
 */
 class Struktura {
 public:
-	Struktura();
+	Struktura(int klucz = INT_MAX);
 	int poprzednik;
 	int klucz;
 	int wierzcholek;

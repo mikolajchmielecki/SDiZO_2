@@ -22,10 +22,12 @@
     <ClCompile Include="BellmanFord.cpp" />
     <ClCompile Include="Dane.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
+    <ClCompile Include="FordFulkerson.cpp" />
     <ClCompile Include="GrafLista.cpp" />
     <ClCompile Include="GrafMacierz.cpp" />
     <ClCompile Include="IAlgorytm.cpp" />
     <ClCompile Include="IGraf.cpp" />
+    <ClCompile Include="Kolejka.cpp" />
     <ClCompile Include="KolejkaPriorytetowa.cpp" />
     <ClCompile Include="Krawedz.cpp" />
     <ClCompile Include="Kruskal.cpp" />
@@ -43,10 +45,12 @@
     <ClInclude Include="BellmanFord.h" />
     <ClInclude Include="Dane.h" />
     <ClInclude Include="Dijkstra.h" />
+    <ClInclude Include="FordFulkerson.h" />
     <ClInclude Include="GrafLista.h" />
     <ClInclude Include="GrafMacierz.h" />
     <ClInclude Include="IAlgorytm.h" />
     <ClInclude Include="IGraf.h" />
+    <ClInclude Include="Kolejka.h" />
     <ClInclude Include="KolejkaPriorytetowa.h" />
     <ClInclude Include="Krawedz.h" />
     <ClInclude Include="Kruskal.h" />
