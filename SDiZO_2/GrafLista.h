@@ -12,12 +12,13 @@ struct Sasiad {
 class GrafLista : public IGraf
 {
 public:
-	GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypAlgorytmu typAlgorytmu = TypAlgorytmu::DEFAULT);
+	GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypProblemu typAlgorytmu = TypProblemu::DEFAULT);
 	virtual ~GrafLista();
 	virtual string toString();
 	virtual void dodajKrawedz(int start, int koniec, int waga);
 	virtual void inicjalizujIteratorKrawedzi();
 	virtual Krawedz* nastepnaKrawedz();
+	virtual string getNazwa();
 	virtual void inicjalizujIteratorSasiadow(int wierzcholek);
 	virtual Krawedz* nastepnySasiad();
 	virtual void inicjalizujPrzeplywy();

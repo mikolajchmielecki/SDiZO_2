@@ -5,9 +5,12 @@
 
 class Kruskal : public MST {
 public:
-	Kruskal(IGraf* graf);
+	Kruskal();
 	~Kruskal();
 	virtual void uruchom();
+	virtual void inicjalizuj(IGraf* graf);
+	virtual void zwolnij();
+	virtual string getNazwa();
 private:
 	Tablica<Krawedz*>* krawedzie;
 };

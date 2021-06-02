@@ -4,18 +4,19 @@
 /*
 zabezpieczenieMinus - je¿eli true to przerywa dzia³anie algorytmu w momencie wykrycia ujemnej wagi
 */
-Dijkstra::Dijkstra(IGraf* graf, bool zabezpieczenieMinus) {
-	this->graf = graf;
+Dijkstra::Dijkstra(bool zabezpieczenieMinus) {
 	this->zabezpieczenieMinus = zabezpieczenieMinus;
 	info = "Nie wykryto ujemnej wagi.";
 }
 
 Dijkstra::~Dijkstra() {
-	// zwalnianie pamiêci zajmowanej prze struktury
-	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
-		delete wierzcholki->tablica[i];
+	if (!zwolniony) {
+		// zwalnianie pamiêci zajmowanej prze struktury
+		for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+			delete wierzcholki->tablica[i];
+		}
+		delete wierzcholki;
 	}
-	delete wierzcholki;
 }
 
 void Dijkstra::uruchom() {
@@ -65,4 +66,22 @@ void Dijkstra::uruchom() {
 
 	wierzcholki = kolejka->naprawTablice();
 	delete kolejka;
+}
+
+void Dijkstra::inicjalizuj(IGraf* graf) {
+	this->graf = graf;
+	zwolniony = false;
+}
+
+void Dijkstra::zwolnij() {
+	// zwalnianie pamiêci zajmowanej prze struktury
+	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+		delete wierzcholki->tablica[i];
+	}
+	delete wierzcholki;
+	zwolniony = true;
+}
+
+string Dijkstra::getNazwa() {
+	return "Dijkstra";
 }

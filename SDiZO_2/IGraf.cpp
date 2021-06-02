@@ -5,7 +5,7 @@ void IGraf::sprawdzKrawedz(int start, int koniec, int waga) {
 		throw exception("[ERROR] B³¹d wczytania krawêdzi");
 	}
 
-	if (typAlgorytmu == TypAlgorytmu::MF && waga <= 0) {
+	if (typAlgorytmu == TypProblemu::MF && waga <= 0) {
 		throw exception("[ERROR] Niedodatni przep³yw");
 	}
 }

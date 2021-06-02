@@ -1,19 +1,36 @@
 #include "BellmanFord.h"
 
-BellmanFord::BellmanFord(IGraf* graf) {
-	this->graf = graf;
+BellmanFord::BellmanFord(bool zabezpieczenieCyklUjemny) {
+	this->zabezpieczenieCyklUjemny = zabezpieczenieCyklUjemny;
 }
 
 /*
 Zwalnia pamiêæ zajmowan¹ przez tablice struktur 
 */
 BellmanFord::~BellmanFord() {
+	if (!zwolniony) {
+		if (wierzcholki != nullptr) {
+			for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+				delete wierzcholki->tablica[i];
+			}
+			delete wierzcholki;
+		}
+	}
+}
+
+void BellmanFord::inicjalizuj(IGraf* graf) {
+	this->graf = graf;
+	zwolniony = false;
+}
+
+void BellmanFord::zwolnij() {
 	if (wierzcholki != nullptr) {
 		for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
 			delete wierzcholki->tablica[i];
 		}
 		delete wierzcholki;
 	}
+	zwolniony = true;
 }
 
 void BellmanFord::uruchom() {
@@ -67,11 +84,22 @@ void BellmanFord::uruchom() {
 	while (krawedz != nullptr) {
 		int odleglosc1 = wierzcholki->tablica[krawedz->koniec]->klucz;
 		int odleglosc2 = wierzcholki->tablica[krawedz->start]->klucz;
+
 		if (odleglosc1 > odleglosc2 + krawedz->waga) {
-			throw exception("[ERROR] Wykryto cykl ujemny lub graf jest niespójny");
+			// dla testowania nie wyrzucamy wyj¹tku
+			if (zabezpieczenieCyklUjemny == false) {
+				break;
+			}
+			else {
+				throw exception("[ERROR] Wykryto cykl ujemny lub graf jest niespójny");
+			}
 		}
 		delete krawedz;
 		krawedz = graf->nastepnaKrawedz();
 	}
+}
+
+string BellmanFord::getNazwa() {
+	return "Bellman-Ford";
 }
 

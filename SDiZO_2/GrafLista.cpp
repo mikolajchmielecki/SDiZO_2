@@ -1,12 +1,14 @@
 #include "GrafLista.h"
 
 
+
+
 /*
 Parametr czyDuplikaty jest potrzebny dla algorytmów MST
 Algorytm Prima wczytuje podwójnie krawedzie
 Algorytm Kruskala wczytuje pojedyczno krawedzie
 */
-GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypAlgorytmu typAlgorytmu) {
+GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypProblemu typAlgorytmu) {
 	this->liczbaKrawedzi = liczbaKrawedzi;
 	this->liczbaWierzcholkow = liczbaWierzcholkow;
 	this->wierzcholekStartowy = wierzcholekStartowy;
@@ -21,7 +23,7 @@ GrafLista::GrafLista(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholek
 	iteratorKolumna = nullptr;
 	this->typAlgorytmu = typAlgorytmu;
 	this->czySkierowany = true;
-	if (typAlgorytmu == TypAlgorytmu::MST) {
+	if (typAlgorytmu == TypProblemu::MST) {
 		this->czySkierowany = false;
 	}
 }
@@ -127,7 +129,7 @@ Krawedz* GrafLista::nastepnaKrawedz() {
 		if (iteratorKolumna != nullptr) {
 			ElementListy<Sasiad*>* iteratorKolumnaTemp = iteratorKolumna;
 			iteratorKolumna = iteratorKolumna->nastepny;
-			if (typAlgorytmu == TypAlgorytmu::MF) {
+			if (typAlgorytmu == TypProblemu::MF) {
 				return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga, iteratorKolumnaTemp->element->przeplyw);
 			}
 
@@ -143,6 +145,10 @@ Krawedz* GrafLista::nastepnaKrawedz() {
 	return nullptr;
 }
 
+string GrafLista::getNazwa() {
+	return "reprezentacja listowa";
+}
+
 void GrafLista::inicjalizujIteratorSasiadow(int wierzcholek) {
 	iteratorRzad = wierzcholek;
 	iteratorKolumna = tablicaList->tablica[wierzcholek]->glowa;
@@ -156,7 +162,7 @@ Krawedz* GrafLista::nastepnySasiad() {
 		ElementListy<Sasiad*>* iteratorKolumnaTemp = iteratorKolumna;
 		iteratorKolumna = iteratorKolumna->nastepny;
 
-		if (typAlgorytmu == TypAlgorytmu::MF) {
+		if (typAlgorytmu == TypProblemu::MF) {
 			return new Krawedz(iteratorRzad, iteratorKolumnaTemp->element->numerWierzcholka, iteratorKolumnaTemp->element->waga, iteratorKolumnaTemp->element->przeplyw);
 		}
 		else {

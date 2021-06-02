@@ -19,6 +19,7 @@ public:
 
 	virtual void dodajKrawedz(int start, int koniec, int waga) = 0;
 	virtual string toString() = 0;
+	virtual string getNazwa() = 0;
 
 	/*
 	Inicjalzuje wszytkie przeplywy na 0
@@ -35,12 +36,13 @@ public:
 	virtual Krawedz* nastepnaKrawedz() = 0;
 	virtual void inicjalizujIteratorSasiadow(int wierzcholek) = 0;
 	virtual Krawedz* nastepnySasiad() = 0;
+	TypProblemu typAlgorytmu;
 protected:
 	ReprezentacjaGrafu reprezentacja;
 	bool czySkierowany;
 	void sprawdzKrawedz(int start, int koniec, int waga);
 	string wyrownajString(string liczbaString, int szerokosc);
 	string powielZnak(char znak, int powtorzenia);
-	TypAlgorytmu typAlgorytmu;
+	
 };
 

@@ -32,6 +32,7 @@
     <ClCompile Include="Krawedz.cpp" />
     <ClCompile Include="Kruskal.cpp" />
     <ClCompile Include="Lista.cpp" />
+    <ClCompile Include="LosowyGraf.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MST.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="SP.cpp" />
     <ClCompile Include="Struktura.cpp" />
     <ClCompile Include="Tablica.cpp" />
+    <ClCompile Include="Testy.cpp" />
     <ClCompile Include="Zbior.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +56,7 @@
     <ClInclude Include="KolejkaPriorytetowa.h" />
     <ClInclude Include="Krawedz.h" />
     <ClInclude Include="Kruskal.h" />
+    <ClInclude Include="LosowyGraf.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="MST.h" />
@@ -62,6 +65,7 @@
     <ClInclude Include="SP.h" />
     <ClInclude Include="Struktura.h" />
     <ClInclude Include="Tablica.h" />
+    <ClInclude Include="Testy.h" />
     <ClInclude Include="Typy.h" />
     <ClInclude Include="Zbior.h" />
   </ItemGroup>

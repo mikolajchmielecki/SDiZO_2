@@ -5,20 +5,21 @@ bool czyMniejszaWaga(Krawedz* krawedz1, Krawedz* krawedz2) {
 }
 
 
-Kruskal::Kruskal(IGraf* graf) {
-	this->graf = graf;
+Kruskal::Kruskal() {
+	
 }
 
 Kruskal::~Kruskal() {
-
-	for (int i = 0; i < krawedzie->getRozmiar(); i++) {
-		Krawedz* krawedz = krawedzie->tablica[i];
-		if (krawedz != nullptr) {
-			delete krawedz;
+	if (!zwolniony) {
+		for (int i = 0; i < krawedzie->getRozmiar(); i++) {
+			Krawedz* krawedz = krawedzie->tablica[i];
+			if (krawedz != nullptr) {
+				delete krawedz;
+			}
 		}
+		delete krawedzie;
+		delete krawedzieMST;
 	}
-	delete krawedzie;
-	delete krawedzieMST;
 }
 
 void Kruskal::uruchom() {
@@ -70,4 +71,26 @@ void Kruskal::uruchom() {
 	}
 	delete zbiory;
 
+}
+
+void Kruskal::inicjalizuj(IGraf* graf) {
+	this->graf = graf;
+	zwolniony = false;
+}
+
+void Kruskal::zwolnij() {
+	zwolniony = true;
+	for (int i = 0; i < krawedzie->getRozmiar(); i++) {
+		Krawedz* krawedz = krawedzie->tablica[i];
+		if (krawedz != nullptr) {
+			delete krawedz;
+		}
+	}
+	delete krawedzie;
+	delete krawedzieMST;
+}
+
+string Kruskal::getNazwa()
+{
+	return "Kruskal";
 }

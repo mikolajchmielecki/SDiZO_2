@@ -1,6 +1,6 @@
 #include "GrafMacierz.h"
 
-GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypAlgorytmu typAlgorytmu) {
+GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzcholekStartowy, int wierzcholekKoncowy, bool czyDuplikaty, TypProblemu typAlgorytmu) {
 	
 	this->liczbaKrawedzi = liczbaKrawedzi;
 	this->liczbaWierzcholkow = liczbaWierzcholkow;
@@ -23,7 +23,7 @@ GrafMacierz::GrafMacierz(int liczbaKrawedzi, int liczbaWierzcholkow, int wierzch
 
 	this->typAlgorytmu = typAlgorytmu;
 	this->czySkierowany = true;
-	if (typAlgorytmu == TypAlgorytmu::MST) {
+	if (typAlgorytmu == TypProblemu::MST) {
 		this->czySkierowany = false;
 	}
 }
@@ -37,7 +37,7 @@ GrafMacierz::~GrafMacierz() {
 	}
 	delete macierz;
 
-	if (typAlgorytmu == TypAlgorytmu::MF) {
+	if (typAlgorytmu == TypProblemu::MF) {
 		for (int i = 0; i < liczbaWierzcholkow; i++) {
 			delete macierzPrzeplywow->tablica[i];
 		}
@@ -123,7 +123,7 @@ Krawedz* GrafMacierz::nastepnaKrawedz() {
 
 				// przejœcie do kolejnej komórki
 				iteratorKolumna++;
-				if (typAlgorytmu == TypAlgorytmu::MF) {
+				if (typAlgorytmu == TypProblemu::MF) {
 					int przeplyw = macierzPrzeplywow->tablica[iteratorRzad]->tablica[iteratorKolumna - 1];
 					return new Krawedz(iteratorRzad, iteratorKolumna - 1, waga, przeplyw);
 				}
@@ -164,7 +164,7 @@ Krawedz* GrafMacierz::nastepnySasiad() {
 			// przejœcie do kolejnej komórki
 			iteratorSasiad++;
 
-			if (typAlgorytmu == TypAlgorytmu::MF) {
+			if (typAlgorytmu == TypProblemu::MF) {
 				int przeplyw = macierzPrzeplywow->tablica[iteratorWierzcholek]->tablica[iteratorSasiad-1];
 				return new Krawedz(iteratorWierzcholek, iteratorSasiad - 1, waga, przeplyw);
 			}
@@ -206,8 +206,32 @@ void GrafMacierz::inicjalizujPrzeplywy() {
 	}
 }
 
+string GrafMacierz::getNazwa()
+{
+	return "reprezentacja macierzowa";
+}
+
 void GrafMacierz::zmienPrzeplyw(int start, int koniec, int zmianaPrzeplywu) {
 	macierzPrzeplywow->tablica[start]->tablica[koniec] += zmianaPrzeplywu;
+}
+
+/*
+Z reprezentacji macierzowej tworzy reprezentacje listowa poprzez skopionwanie kazdej krawedzi
+*/
+GrafLista* GrafMacierz::getGrafLista() {
+	GrafLista* grafLita = new GrafLista(liczbaKrawedzi, liczbaWierzcholkow, wierzcholekStartowy, wierzcholekKoncowy, czyDuplikaty, typAlgorytmu);
+	inicjalizujIteratorKrawedzi();
+	Krawedz* krawedz = nastepnaKrawedz();
+	while (krawedz != nullptr) {
+		grafLita->dodajKrawedz(krawedz->start, krawedz->koniec, krawedz->waga);
+		delete krawedz;
+		krawedz = nastepnaKrawedz();
+	}
+	return grafLita;
+}
+
+Tablica<Tablica<int>*>* GrafMacierz::getMacierz() {
+	return macierz;
 }
 
 /*

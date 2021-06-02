@@ -9,9 +9,13 @@ using namespace std;
 
 class BellmanFord : public SP {
 public:
-	BellmanFord(IGraf* graf);
+	BellmanFord(bool zabezpieczenieCyklUjemny = true);
 	~BellmanFord();
+	virtual void inicjalizuj(IGraf* graf);
+	virtual void zwolnij();
 	virtual void uruchom();
-
+	virtual string getNazwa();
+private:
+	bool zabezpieczenieCyklUjemny;
 };
 

@@ -7,7 +7,7 @@
 string SP::getWynik() {
     string wynik = "Start = ";
     wynik += to_string(graf->wierzcholekStartowy);
-    wynik += "\n End\t Dist\t Path\n\n";
+    wynik += "\n End\t Dist\t Path\n";
 
     // wpisywanie wyników kolejnych wierzcho³ków
     for (int i = 0; i < graf->liczbaWierzcholkow; i++) {

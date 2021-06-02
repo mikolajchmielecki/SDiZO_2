@@ -7,7 +7,7 @@ using namespace std;
 
 Dane::Dane() {
 	liczbaOpcji = 2;
-	sciezka = "ford.txt";
+	sciezka = "dane.txt";
 }
 
 void Dane::menu() {
@@ -81,7 +81,7 @@ d. dla problemu MST krawêdzie traktowane s¹ jako nieskierowane, natomiast dla
 algorytmów najkrótszej œcie¿ki i maksymalnego przep³ywu jako skierowane,
 
 */
-IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu, bool czyDuplikaty) {
+IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypProblemu typAlgorytmu, bool czyDuplikaty) {
 	ifstream plik;
 	plik.open(sciezka);
 	IGraf* graf = nullptr;
@@ -99,11 +99,11 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 			throw exception("[ERROR] B³¹d wczytania nag³ówka grafu z pliku");
 
 		int naglowekLiczba = 0;
-		if (typAlgorytmu == TypAlgorytmu::SP) {
+		if (typAlgorytmu == TypProblemu::SP) {
 			naglowekLiczba = 3;
-		} else if (typAlgorytmu == TypAlgorytmu::MST) {
+		} else if (typAlgorytmu == TypProblemu::MST) {
 			naglowekLiczba = 2;
-		} else if (typAlgorytmu == TypAlgorytmu::MF) {
+		} else if (typAlgorytmu == TypProblemu::MF) {
 			naglowekLiczba = 4;
 		}
 
@@ -124,13 +124,13 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 		if (liczbaWierzcholkow <= 0) {
 			throw exception("[ERROR] B³¹d wczytania liczby wierzcho³ków");
 		}
-		if (typAlgorytmu == TypAlgorytmu::SP || typAlgorytmu == TypAlgorytmu::MF) {
+		if (typAlgorytmu == TypProblemu::SP || typAlgorytmu == TypProblemu::MF) {
 			wierzcholekStartowy = tablica[2];
 			if (wierzcholekStartowy < 0 || wierzcholekStartowy >= liczbaWierzcholkow) {
 				throw exception("[ERROR] B³¹d wczytania wierzcho³ka startowego");
 			}
 		}
-		if (typAlgorytmu == TypAlgorytmu::MF) {
+		if (typAlgorytmu == TypProblemu::MF) {
 			wierzcholekKoncowy = tablica[3];
 			if (wierzcholekKoncowy < 0 || wierzcholekKoncowy >= liczbaWierzcholkow) {
 				throw exception("[ERROR] B³¹d wczytania wierzcho³ka koñcowego");
@@ -176,7 +176,7 @@ IGraf* Dane::getGraf(ReprezentacjaGrafu reprezentacja, TypAlgorytmu typAlgorytmu
 
 			/*
 			// dla grafów nieskierowanych pocz¹tek musi byæ wiêkszy od koñca
-			if (typAlgorytmu == TypAlgorytmu::MST && krawedzTablica[0] < krawedzTablica[1]) {
+			if (typAlgorytmu == TypProblemu::MST && krawedzTablica[0] < krawedzTablica[1]) {
 				swap(krawedzTablica[0], krawedzTablica[1]);
 			}
 			*/

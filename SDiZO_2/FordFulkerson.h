@@ -8,10 +8,13 @@ using namespace std;
 
 class FordFulkerson : public IAlgorytm {
 public:
-	FordFulkerson(IGraf* graf, TrybPrzeszukiwania tryb);
+	FordFulkerson(TrybPrzeszukiwania tryb);
 	~FordFulkerson();
 	virtual void uruchom();
 	virtual string getWynik();
+	virtual void inicjalizuj(IGraf* graf);
+	virtual void zwolnij();
+	virtual string getNazwa();
 private:
 	void inicjalizujTablicePrzeplywow();
 	TrybPrzeszukiwania tryb;

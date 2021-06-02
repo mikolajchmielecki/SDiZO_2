@@ -1,21 +1,23 @@
 #include "Prim.h"
 
 
-Prim::Prim(IGraf* graf) {
-	this->graf = graf;
+Prim::Prim() {
+	
 }
 
 Prim::~Prim() {
-	for (int i = 0; i < krawedzieMST->getRozmiar(); i++) {
-		delete krawedzieMST->tablica[i];
-	}
-	delete krawedzieMST;
+	if (!zwolniony) {
+		for (int i = 0; i < krawedzieMST->getRozmiar(); i++) {
+			delete krawedzieMST->tablica[i];
+		}
+		delete krawedzieMST;
 
-	// zwalnianie pamiêci zajmowanej prze struktury
-	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
-		delete wierzcholki->tablica[i];
+		// zwalnianie pamiêci zajmowanej prze struktury
+		for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+			delete wierzcholki->tablica[i];
+		}
+		delete wierzcholki;
 	}
-	delete wierzcholki;
 }
 
 void Prim::uruchom() {
@@ -86,6 +88,30 @@ void Prim::uruchom() {
 		}
 	}
 
+}
+
+void Prim::inicjalizuj(IGraf* graf) {
+	this->graf = graf;
+	zwolniony = false;
+}
+
+void Prim::zwolnij() {
+	zwolniony = true;
+	for (int i = 0; i < krawedzieMST->getRozmiar(); i++) {
+		delete krawedzieMST->tablica[i];
+	}
+	delete krawedzieMST;
+
+	// zwalnianie pamiêci zajmowanej prze struktury
+	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+		delete wierzcholki->tablica[i];
+	}
+	delete wierzcholki;
+}
+
+string Prim::getNazwa()
+{
+	return "Prim";
 }
 
 

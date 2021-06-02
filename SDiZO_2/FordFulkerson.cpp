@@ -1,17 +1,17 @@
 #include "FordFulkerson.h"
 
-FordFulkerson::FordFulkerson(IGraf* graf, TrybPrzeszukiwania tryb) {
-	this->graf = graf;
+FordFulkerson::FordFulkerson(TrybPrzeszukiwania tryb) {
 	this->tryb = tryb;
-	this->maksymalnyPrzeplyw = 0;
 }
 
 FordFulkerson::~FordFulkerson() {
-	// zwalnianie pamiêci zajmowanej prze struktury
-	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
-		delete wierzcholki->tablica[i];
+	if (!zwolniony) {
+		// zwalnianie pamiêci zajmowanej prze struktury
+		for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+			delete wierzcholki->tablica[i];
+		}
+		delete wierzcholki;
 	}
-	delete wierzcholki;
 }
 
 void FordFulkerson::uruchom() {
@@ -82,7 +82,8 @@ string FordFulkerson::getWynik() {
 	}
 
 	tablicaKrawedzi->sortuj(&czyPrzedFordFulkerson);
-	string wynik = " Edge\t\tFlow (max/used)\n";
+	string wynik = "Start = " + to_string(graf->wierzcholekStartowy) + "   Koniec = " + to_string(graf->wierzcholekKoncowy) + "\n";
+	wynik += " Edge\t\tFlow (max/used)\n";
 
 	for (int i = 0; i < graf->liczbaKrawedzi; i++) {
 		if (tablicaKrawedzi->tablica[i]->przeplyw > 0) {
@@ -101,6 +102,32 @@ string FordFulkerson::getWynik() {
 	}
 	delete tablicaKrawedzi;
 
+	return wynik;
+}
+
+void FordFulkerson::inicjalizuj(IGraf* graf) {
+	this->graf = graf;
+	this->maksymalnyPrzeplyw = 0;
+	zwolniony = false;
+}
+
+void FordFulkerson::zwolnij() {
+	zwolniony = true;
+	// zwalnianie pamiêci zajmowanej prze struktury
+	for (int i = 0; i < graf->liczbaWierzcholkow; i++) {
+		delete wierzcholki->tablica[i];
+	}
+	delete wierzcholki;
+}
+
+string FordFulkerson::getNazwa() {
+	string wynik = "Ford-Fulkerson-";
+	if (tryb == TrybPrzeszukiwania::BFS) {
+		wynik += "BFS";
+	}
+	else {
+		wynik += "DFS";
+	}
 	return wynik;
 }
 
@@ -162,3 +189,5 @@ bool FordFulkerson::znajdzSciezkeRozszerzajaca() {
 	return false;
 	
 }
+
+

@@ -6,10 +6,12 @@
 
 class Prim : public MST {
 public:
-	Prim(IGraf* graf);
+	Prim();
 	~Prim();
 	virtual void uruchom();
-
+	virtual void inicjalizuj(IGraf* graf);
+	virtual void zwolnij();
+	virtual string getNazwa();
 };
 
 
