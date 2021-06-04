@@ -16,8 +16,11 @@ void Testy::uruchomTesty() {
 	testujAlgorytm(prim, liczbaWierzcholkow, TypAlgorytmu::PRIM);
 	testujAlgorytm(bellmanFord, liczbaWierzcholkow, TypAlgorytmu::BELLMANFORD);
 	testujAlgorytm(dijkstra, liczbaWierzcholkow, TypAlgorytmu::DIJKSTRA);
-	testujAlgorytm(fordFulkersonBFS, liczbaWierzcholkow, TypAlgorytmu::FORDFURKELSON);
+
+	liczbaWierzcholkow = 50;
 	testujAlgorytm(fordFulkersonDFS, liczbaWierzcholkow, TypAlgorytmu::FORDFURKELSON);
+	testujAlgorytm(fordFulkersonBFS, liczbaWierzcholkow, TypAlgorytmu::FORDFURKELSON);
+	
 
 	long long int czas = read_QPC() - start;
 	cout <<  "[INFO] Czas trwania: "<< czas / frequency << " s";

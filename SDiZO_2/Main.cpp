@@ -127,6 +127,7 @@ void menuSP(Dane* dane) {
 				dijkstra->inicjalizuj(graf);
 				dijkstra->uruchom();
 				cout << endl << endl << "Wynika dzia³ania algorytmu Dijkstry:" << endl << dijkstra->getWynik();
+				cout << dijkstra->info << endl;
 			}
 			catch (exception e) {
 				cout << e.what() << endl;
